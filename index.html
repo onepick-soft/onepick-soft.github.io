@@ -1,44 +1,413 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onepick Soft</title>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OnePick Soft</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
-        header { border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
-        h1 { color: #333; }
-        .footer-info { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.9em; color: #666; }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000000;
+        color: #f5f5f7;
+        -webkit-font-smoothing: antialiased;
+      }
+      .blur-header {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+      .card-shadow {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-shadow:hover {
+        transform: scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      }
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Language Fade Transition */
+      .lang-transition {
+        transition: opacity 0.3s ease;
+      }
+      .opacity-0 {
+        opacity: 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body
+    class="min-h-screen flex flex-col selection:bg-purple-500 selection:text-white"
+  >
+    <!-- Header -->
+    <header
+      class="fixed top-0 w-full z-50 blur-header border-b border-white/10"
+    >
+      <div
+        class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="https://lh3.googleusercontent.com/I6hCf5DwfyyjxAU5_KFjxEGR5YVuzGQ0DJoyeT-z5faHmaYvm3E81po3wmxlPLvb8uA"
+            alt="OnePick Soft Logo"
+            class="h-9 w-auto rounded-lg"
+          />
+          <span class="font-semibold tracking-tight text-white hidden sm:block"
+            >OnePick Soft</span
+          >
+        </div>
 
-    <header>
-        <h1>Onepick Soft</h1>
+        <!-- Language Switcher -->
+        <button
+          id="lang-toggle"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-sm font-medium text-gray-300 hover:text-white"
+        >
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          <span class="lang-text lang-transition" data-lang="ko">English</span>
+          <span class="lang-text lang-transition hidden" data-lang="en"
+            >한국어</span
+          >
+        </button>
+      </div>
     </header>
 
-    <main>
-        <h2>About Us</h2>
-        <p>
-            We create value with AI technology.<br>
-            We are dedicated to providing the best user experience through innovative software solutions.
-        </p>
+    <!-- Main Content -->
+    <main class="flex-grow pt-32 pb-20 px-6">
+      <div class="max-w-5xl mx-auto">
+        <!-- Hero Section -->
+        <div class="text-center mb-24 animate-on-scroll delay-100">
+          <h1
+            class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-6 leading-tight bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent min-h-[1.2em]"
+          >
+            <span class="lang-text lang-transition" data-lang="ko"
+              >Creating <br class="md:hidden" />Micro-Universes.</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Creating <br class="md:hidden" />Micro-Universes.</span
+            >
+          </h1>
+          <p
+            class="text-xl text-gray-400 max-w-2xl mx-auto font-medium leading-relaxed min-h-[3em]"
+          >
+            <span class="lang-text lang-transition" data-lang="ko"
+              >AI로 당신의 영혼과 깊이 연결되는 경험을 만듭니다.<br />간결하고,
+              직관적이며, 마법 같은.</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >We build AI-driven experiences that connect deeply with your
+              soul.<br />Simple, intuitive, and magical.</span
+            >
+          </p>
+        </div>
 
-        <h3>Our Products</h3>
-        <ul>
-            <li>Onepick Tarot (Coming Soon)</li>
-        </ul>
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Card 1: OnePick Tarot -->
+          <div
+            class="animate-on-scroll delay-200 bg-[#1c1c1e] rounded-[2rem] p-10 h-[520px] flex flex-col justify-between relative overflow-hidden card-shadow group border border-white/5"
+          >
+            <!-- Background Accent -->
+            <div
+              class="absolute -top-10 -right-10 w-64 h-64 bg-purple-500 rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity duration-500"
+            ></div>
+
+            <div class="relative z-10">
+              <div class="flex items-center space-x-2 mb-4">
+                <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400">
+                  <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <span
+                  class="text-xs font-bold text-gray-500 uppercase tracking-widest"
+                  >Available Now</span
+                >
+              </div>
+              <h2 class="text-3xl font-bold mb-3 text-white">
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >원픽타로</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >OnePick Tarot</span
+                >
+              </h2>
+              <p class="text-gray-400 text-lg leading-relaxed h-[3.5em]">
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >AI 타로마스터가 들려주는 운명의 이야기.<br />언제 어디서나
+                  당신 곁에.</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Discover your destiny with AI.<br />Your personalized tarot
+                  master, available 24/7.</span
+                >
+              </p>
+            </div>
+
+            <div class="relative z-10 mt-6 flex flex-col space-y-3">
+              <!-- Store Button -->
+              <a
+                href="https://play.google.com/store/apps/details?id=com.onepick.tarot"
+                target="_blank"
+                class="flex items-center justify-center gap-3 px-6 py-4 bg-[#2c2c2e] text-white border border-white/10 rounded-xl font-semibold hover:bg-[#3a3a3c] transition-colors group-hover:translate-x-1 duration-300 shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg"
+                  alt="Play Store"
+                  class="h-6 w-6"
+                />
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >Google Play에서 다운로드</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Get it on Google Play</span
+                >
+              </a>
+
+              <!-- Website Button -->
+              <a
+                href="https://onepick-soft.github.io/onepick-tarot/"
+                target="_blank"
+                class="flex items-center justify-center px-6 py-3 bg-[#2c2c2e] border border-white/10 text-gray-300 rounded-xl font-semibold hover:bg-[#3a3a3c] hover:text-white transition-colors"
+              >
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >웹사이트 방문</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Visit Website</span
+                >
+                <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: OnePick Dream -->
+          <div
+            class="animate-on-scroll delay-300 bg-[#1c1c1e] text-white rounded-[2rem] p-10 h-[520px] flex flex-col justify-between relative overflow-hidden card-shadow border border-white/5"
+          >
+            <!-- Background Accent -->
+            <div
+              class="absolute -bottom-10 -left-10 w-72 h-72 bg-indigo-600 rounded-full blur-[100px] opacity-20"
+            ></div>
+
+            <div class="relative z-10">
+              <div class="flex items-center space-x-2 mb-4">
+                <div class="p-2 bg-white/10 rounded-lg text-gray-400">
+                  <i data-lucide="moon" class="w-5 h-5"></i>
+                </div>
+                <span
+                  class="text-xs font-bold text-gray-500 uppercase tracking-widest"
+                  >Coming Soon</span
+                >
+              </div>
+              <h2 class="text-3xl font-bold mb-3 text-white">
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >원픽 꿈해몽</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >OnePick Dream</span
+                >
+              </h2>
+              <p class="text-gray-400 text-lg leading-relaxed h-[3.5em]">
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >무의식이 보내는 메시지, 꿈.<br />생성형 AI로 해석하는 깊이
+                  있는 꿈해몽.</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Unlock the secrets of your subconscious.<br />Advanced dream
+                  interpretation powered by generative AI.</span
+                >
+              </p>
+            </div>
+
+            <div class="relative z-10 mt-8">
+              <div
+                class="flex items-center justify-center px-8 py-4 bg-white/5 text-gray-500 rounded-xl font-semibold cursor-not-allowed border border-white/5"
+              >
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >출시 예정</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Launching Soon..</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <footer class="footer-info">
-        <p><strong>Business Information</strong></p>
-        <p>
-            Business Name: Onepick Soft<br>
-            Address: Incheon, South Korea (사업자등록증상의 상세 영문 주소 입력)<br>
-            Contact Email: contact@onepick-soft.com (도메인 구입 후 연결할 이메일 미리 기재)
-        </p>
-        <p>&copy; 2026 Onepick Soft. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/10 py-16">
+      <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-bold text-lg mb-2 text-white">OnePick Soft</h3>
+          <p class="text-sm text-gray-500">
+            © 2026 OnePick Soft. All rights reserved.
+          </p>
+          <p class="text-sm text-gray-500 mb-4">
+            <span class="lang-text lang-transition" data-lang="ko"
+              >인천광역시 부평구</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Incheon, Republic of Korea</span
+            >
+          </p>
+
+          <!-- Policy Links -->
+          <div class="flex gap-4 text-xs text-gray-400">
+            <a
+              href="https://onepick-soft.github.io/onepick-tarot/TERMS_OF_SERVICE"
+              target="_blank"
+              class="hover:text-white transition-colors underline"
+            >
+              <span class="lang-text lang-transition" data-lang="ko"
+                >서비스 이용약관</span
+              >
+              <span class="lang-text lang-transition hidden" data-lang="en"
+                >Terms of Service</span
+              >
+            </a>
+            <a
+              href="https://onepick-soft.github.io/onepick-tarot/PRIVACY_POLICY"
+              target="_blank"
+              class="hover:text-white transition-colors underline"
+            >
+              <span class="lang-text lang-transition" data-lang="ko"
+                >개인정보처리방침</span
+              >
+              <span class="lang-text lang-transition hidden" data-lang="en"
+                >Privacy Policy</span
+              >
+            </a>
+          </div>
+        </div>
+
+        <div class="text-left md:text-right space-y-1">
+          <p class="text-xs text-gray-500">
+            <span class="lang-text lang-transition" data-lang="ko"
+              >상호: 원픽소프트 | 대표: 이정빈</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Company: OnePick Soft | CEO: Jungbin Lee</span
+            >
+          </p>
+          <p class="text-xs text-gray-500">
+            <span class="lang-text lang-transition" data-lang="ko"
+              >사업자등록번호: 571-56-00945</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Business License: 571-56-00945</span
+            >
+          </p>
+          <p class="text-xs text-gray-500">
+            <span class="lang-text lang-transition" data-lang="ko"
+              >통신판매업신고: 2026-인천부평-0026호</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Mail Order License: 2026-IncheonBupyeong-0026</span
+            >
+          </p>
+          <p class="text-xs text-gray-500">
+            Contact:
+            <a
+              href="mailto:butswave21@gmail.com"
+              class="hover:text-gray-300 underline"
+              >butswave21@gmail.com</a
+            >
+          </p>
+        </div>
+      </div>
     </footer>
 
-</body>
+    <script>
+      // Icon initialization
+      lucide.createIcons();
+
+      // Language Switcher Logic with Fade Transition
+      const langToggleBtn = document.getElementById("lang-toggle");
+      let currentLang = "ko";
+      let isTransitioning = false;
+
+      function updateLanguage(lang) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        const allCurrentText = document.querySelectorAll(
+          `.lang-text:not(.hidden)`
+        );
+        const allNextText = document.querySelectorAll(
+          `.lang-text[data-lang="${lang}"]`
+        );
+
+        // 1. Fade out current text
+        allCurrentText.forEach((el) => el.classList.add("opacity-0"));
+
+        // 2. Wait for fade out, then switch
+        setTimeout(() => {
+          allCurrentText.forEach((el) => {
+            el.classList.add("hidden");
+            el.classList.remove("opacity-0"); // reset opacity for next time
+          });
+
+          allNextText.forEach((el) => {
+            el.classList.remove("hidden");
+            el.classList.add("opacity-0"); // prepare for fade in
+          });
+
+          // 3. Small delay then fade in new text
+          requestAnimationFrame(() => {
+            allNextText.forEach((el) => {
+              el.classList.remove("opacity-0");
+            });
+            isTransitioning = false;
+          });
+        }, 300); // Wait 300ms (match CSS transition time)
+      }
+
+      langToggleBtn.addEventListener("click", () => {
+        currentLang = currentLang === "ko" ? "en" : "ko";
+        updateLanguage(currentLang);
+      });
+
+      // Initialize (Default is Korean)
+      // No action needed as HTML structure defaults to Korean visible
+
+      // Scroll Animation Observer
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".animate-on-scroll").forEach((el, index) => {
+        if (
+          !el.classList.contains("delay-100") &&
+          !el.classList.contains("delay-200")
+        ) {
+          el.style.transitionDelay = `${index * 0.1}s`;
+        }
+        observer.observe(el);
+      });
+    </script>
+  </body>
 </html>
