@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>계정 삭제 요청 - OnePick Soft</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" type="image/png" href="unnamed.png" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000000;
+        color: #f5f5f7;
+        -webkit-font-smoothing: antialiased;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .input-field {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
+        transition: border-color 0.2s;
+      }
+      .input-field:focus {
+        border-color: #a855f7;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header
+      class="w-full border-b border-white/10 p-6 bg-black/50 backdrop-blur-md fixed top-0 z-50"
+    >
+      <div class="max-w-xl mx-auto flex items-center gap-3">
+        <a
+          href="index.html"
+          class="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
+          <img
+            src="unnamed.png"
+            alt="OnePick Soft Logo"
+            class="h-8 w-auto rounded-lg"
+          />
+          <span class="font-semibold text-white">OnePick Soft</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-32 pb-20 px-6">
+      <div class="max-w-xl mx-auto">
+        <div class="text-center mb-10">
+          <h1 class="text-3xl font-bold mb-4">계정 삭제 및 데이터 파기 요청</h1>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            아래 양식을 작성하여 제출하시면,<br />
+            요청 접수 후 <span class="text-red-400 font-bold">7일 이내</span>에
+            귀하의 계정 및 관련 모든 데이터가<br />
+            <span class="text-red-400 font-bold">영구적으로 삭제</span>됩니다.
+          </p>
+        </div>
+
+        <div class="glass-panel p-8 rounded-2xl shadow-2xl">
+          <form id="deleteForm" class="space-y-6">
+            <!-- 1. Select App -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2"
+                >삭제할 앱 선택 <span class="text-red-500">*</span></label
+              >
+              <div class="space-y-3">
+                <label
+                  class="flex items-center p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition-colors group"
+                >
+                  <input
+                    type="radio"
+                    name="app_name"
+                    value="원픽드림 (OnePick Dream)"
+                    class="mr-3 accent-purple-500 w-5 h-5"
+                    checked
+                  />
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 rounded bg-indigo-900 flex items-center justify-center"
+                    >
+                      <i data-lucide="moon" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div>
+                      <span class="block text-white font-medium">원픽드림</span>
+                      <span
+                        class="block text-xs text-gray-500 group-hover:text-gray-400"
+                        >OnePick Dream</span
+                      >
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  class="flex items-center p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition-colors group"
+                >
+                  <input
+                    type="radio"
+                    name="app_name"
+                    value="원픽타로 (OnePick Tarot)"
+                    class="mr-3 accent-purple-500 w-5 h-5"
+                  />
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 rounded bg-purple-900 flex items-center justify-center"
+                    >
+                      <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div>
+                      <span class="block text-white font-medium">원픽타로</span>
+                      <span
+                        class="block text-xs text-gray-500 group-hover:text-gray-400"
+                        >OnePick Tarot</span
+                      >
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- 2. Email Input -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-300 mb-2"
+                >가입한 이메일 주소 <span class="text-red-500">*</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                class="input-field w-full px-4 py-3 rounded-xl placeholder-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="예: user@example.com"
+                required
+              />
+              <p class="text-xs text-gray-500 mt-2 ml-1">
+                * 실제 가입된 계정이 아닐 경우 처리가 불가능할 수 있습니다.
+              </p>
+            </div>
+
+            <!-- 3. Agreement -->
+            <div class="pt-4 border-t border-white/10">
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  id="agreement"
+                  class="mt-1 w-5 h-5 rounded border-gray-600 accent-red-500"
+                  required
+                />
+                <span
+                  class="text-sm text-gray-400 group-hover:text-gray-300 transition-colors"
+                >
+                  계정 삭제 시 구매 기록, 사용 내역 등 모든 데이터가 영구적으로
+                  파기되며 복구할 수 없음을 이해했으며 이에 동의합니다.
+                </span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2"
+            >
+              <i data-lucide="trash-2" class="w-5 h-5"></i>
+              <span>삭제 요청 메일 보내기</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/10 py-8 text-center">
+      <p class="text-xs text-gray-600">
+        © 2026 OnePick Soft. All rights reserved.
+      </p>
+    </footer>
+
+    <script>
+      lucide.createIcons();
+
+      const form = document.getElementById("deleteForm");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const appName = document.querySelector(
+          'input[name="app_name"]:checked'
+        ).value;
+        const email = document.getElementById("email").value.trim();
+        const agreement = document.getElementById("agreement").checked;
+
+        if (!agreement) {
+          alert("데이터 파기 동의에 체크해주세요.");
+          return;
+        }
+
+        // Developer Email
+        const recipient = "butswave21@gmail.com";
+        const subject = `[계정 삭제 요청] ${appName}`;
+
+        const body = `
+[계정 삭제 및 데이터 파기 요청]
+
+1. 삭제 대상 앱: ${appName}
+2. 사용자 계정(이메일): ${email}
+3. 요청 일자: ${new Date().toLocaleDateString()}
+
+상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.
+        `.trim();
+
+        // Create mailto link
+        const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
+          subject
+        )}&body=${encodeURIComponent(body)}`;
+
+        // Open default mail client
+        window.location.href = mailtoLink;
+      });
+    </script>
+  </body>
+</html>
