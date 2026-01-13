@@ -125,7 +125,48 @@
         </div>
 
         <div class="glass-panel p-8 rounded-2xl shadow-2xl">
-          <form id="deleteForm" class="space-y-6">
+          <form
+            id="deleteForm"
+            action="https://formsubmit.co/butswave21@gmail.com"
+            method="POST"
+            class="space-y-6"
+          >
+            <!-- FormSubmit Configuration -->
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
+            <input
+              type="hidden"
+              name="_next"
+              value="https://onepick-soft.github.io/delete-request.html"
+            />
+            <input
+              type="hidden"
+              name="_subject"
+              id="hiddenSubject"
+              value="[OnePick] 계정 삭제 요청"
+            />
+
+            <!-- Auto Response Message -->
+            <input
+              type="hidden"
+              name="_autoresponse"
+              value="
+[OnePick Soft] 계정 삭제 확인 메일 / Verification Email
+
+안녕하세요, 원픽소프트입니다.
+계정 삭제 요청이 정상적으로 접수되었습니다.
+
+본인 확인 및 최종 처리를 위해, 이 메일에 '삭제 동의'라고 답장(Reply)해 주세요.
+답장이 확인되는 즉시 귀하의 모든 데이터가 영구 삭제됩니다.
+(답장이 없으면 삭제 처리가 진행되지 않습니다.)
+
+---
+We received your request to delete your account.
+To finalize this process, please REPLY to this email.
+Your data will be permanently deleted upon receiving your reply.
+"
+            />
+
             <!-- 1. Select App -->
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
@@ -143,7 +184,7 @@
                 >
                   <input
                     type="radio"
-                    name="app_name"
+                    name="App Name"
                     value="원픽드림 (OnePick Dream)"
                     class="mr-3 accent-purple-500 w-5 h-5"
                     checked
@@ -177,7 +218,7 @@
                 >
                   <input
                     type="radio"
-                    name="app_name"
+                    name="App Name"
                     value="원픽타로 (OnePick Tarot)"
                     class="mr-3 accent-purple-500 w-5 h-5"
                   />
@@ -207,7 +248,7 @@
               </div>
             </div>
 
-            <!-- 2. Email Input -->
+            <!-- 2. Email Input (Name must be 'email' for autoresponse) -->
             <div>
               <label
                 for="email"
@@ -223,6 +264,7 @@
               </label>
               <input
                 type="email"
+                name="email"
                 id="email"
                 class="input-field w-full px-4 py-3 rounded-xl placeholder-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="e.g. user@example.com"
@@ -240,7 +282,7 @@
               </p>
             </div>
 
-            <!-- 3. Agreement -->
+            <!-- Agreement Checkbox -->
             <div class="pt-4 border-t border-white/10">
               <label class="flex items-start gap-3 cursor-pointer group">
                 <input
@@ -320,49 +362,17 @@
               </div>
             </div>
 
-            <!-- Honeypot (Spam protection) -->
-            <input type="text" name="_honey" style="display: none" />
-
-            <!-- Disable Captcha (Optional, remove if you want captcha) -->
-            <input type="hidden" name="_captcha" value="false" />
-
             <button
               type="submit"
-              id="submitBtn"
-              class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2"
             >
               <i data-lucide="trash-2" class="w-5 h-5"></i>
-              <span class="btn-text lang-text lang-transition" data-lang="ko"
-                >삭제 요청하기</span
+              <span class="lang-text lang-transition" data-lang="ko"
+                >삭제 요청 메일 보내기</span
               >
-              <span
-                class="btn-text lang-text lang-transition hidden"
-                data-lang="en"
-                >Submit Request</span
+              <span class="lang-text lang-transition hidden" data-lang="en"
+                >Send Deletion Request</span
               >
-
-              <!-- Loading Spinner (Hidden by default) -->
-              <svg
-                class="animate-spin h-5 w-5 text-white hidden"
-                id="loadingSpinner"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
             </button>
           </form>
         </div>
@@ -379,7 +389,7 @@
     <script>
       lucide.createIcons();
 
-      // Language Switcher Logic
+      // Language Switcher
       const langToggleBtn = document.getElementById("lang-toggle");
       let currentLang = "ko";
       let isTransitioning = false;
@@ -387,7 +397,6 @@
       function updateLanguage(lang) {
         if (isTransitioning) return;
         isTransitioning = true;
-
         const allCurrentText = document.querySelectorAll(
           `.lang-text:not(.hidden)`
         );
@@ -395,29 +404,24 @@
           `.lang-text[data-lang="${lang}"]`
         );
 
-        // 1. Fade out current text
         allCurrentText.forEach((el) => el.classList.add("opacity-0"));
 
-        // 2. Wait for fade out, then switch
         setTimeout(() => {
           allCurrentText.forEach((el) => {
             el.classList.add("hidden");
             el.classList.remove("opacity-0");
           });
-
           allNextText.forEach((el) => {
             el.classList.remove("hidden");
             el.classList.add("opacity-0");
           });
-
-          // 3. Small delay then fade in new text
           requestAnimationFrame(() => {
             allNextText.forEach((el) => {
               el.classList.remove("opacity-0");
             });
             isTransitioning = false;
           });
-        }, 300); // 300ms matches CSS transition
+        }, 300);
       }
 
       langToggleBtn.addEventListener("click", () => {
@@ -425,39 +429,25 @@
         updateLanguage(currentLang);
       });
 
-      // Math Captcha Logic
+      // Math Captcha
       let captchaSum = 0;
-
       function generateCaptcha() {
-        const num1 = Math.floor(Math.random() * 9) + 1; // 1-9
-        const num2 = Math.floor(Math.random() * 9) + 1; // 1-9
+        const num1 = Math.floor(Math.random() * 9) + 1;
+        const num2 = Math.floor(Math.random() * 9) + 1;
         captchaSum = num1 + num2;
-
         const questionEl = document.getElementById("captcha-question");
         questionEl.textContent = `${num1} + ${num2}`;
         document.getElementById("captcha-input").value = "";
       }
-
       document
         .getElementById("refresh-captcha")
         .addEventListener("click", generateCaptcha);
+      generateCaptcha(); // Init
 
-      // Init Captcha
-      generateCaptcha();
-
-      // Form Submission (AJAX)
+      // Form Submission
       const form = document.getElementById("deleteForm");
-      const submitBtn = document.getElementById("submitBtn");
-      const btnTexts = document.querySelectorAll(".btn-text");
-      const loadingSpinner = document.getElementById("loadingSpinner");
 
       form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const appName = document.querySelector(
-          'input[name="app_name"]:checked'
-        ).value;
-        const email = document.getElementById("email").value.trim();
         const agreement = document.getElementById("agreement").checked;
         const captchaInput = parseInt(
           document.getElementById("captcha-input").value
@@ -465,6 +455,7 @@
 
         // Validation 1: Agreement
         if (!agreement) {
+          e.preventDefault();
           const msg =
             currentLang === "ko"
               ? "데이터 파기 동의에 체크해주세요."
@@ -475,89 +466,32 @@
 
         // Validation 2: Captcha
         if (captchaInput !== captchaSum) {
+          e.preventDefault();
           const msg =
             currentLang === "ko"
-              ? "보안 문자가 올바르지 않습니다. 다시 계산해주세요."
-              : "Incorrect security check. Please try again.";
+              ? "보안 문자가 올바르지 않습니다."
+              : "Incorrect security check.";
           alert(msg);
           document.getElementById("captcha-input").value = "";
           document.getElementById("captcha-input").focus();
           return;
         }
 
-        // Set Loading State
-        submitBtn.disabled = true;
-        btnTexts.forEach((el) => el.classList.add("hidden"));
-        loadingSpinner.classList.remove("hidden");
+        // Prepare Subject properly
+        const appName = document.querySelector(
+          'input[name="App Name"]:checked'
+        ).value;
+        const email = document.getElementById("email").value.trim();
+        document.getElementById(
+          "hiddenSubject"
+        ).value = `[삭제요청] ${appName} - ${email}`;
 
-        // Prepare Data
-        const formData = {
-          _subject: `[계정 삭제 요청] ${appName} - ${email}`,
-          _template: "table", // Format the email nicely
-          _autoresponse: `
-[OnePick Soft] 계정 삭제 확인 메일
-
-안녕하세요, 원픽소프트입니다.
-${appName} 앱의 계정 삭제 요청이 정상적으로 접수되었습니다.
-
-본인 확인 및 최종 처리를 위해, 이 메일에 "삭제 동의"라고 답장(Reply)해 주세요.
-답장이 확인되는 즉시 귀하의 모든 데이터가 영구 삭제됩니다.
-
-(답장이 없으면 삭제 처리가 진행되지 않습니다.)
-
----
-[Verification Request]
-We received your request to delete your ${appName} account.
-To finalize this process, please REPLY to this email.
-Your data will be permanently deleted upon receiving your reply.
-          `.trim(),
-          app_name: appName,
-          email: email,
-          request_date: new Date().toLocaleDateString(),
-          message:
-            "상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.\n(I request the permanent deletion of my account and all associated data.)",
-        };
-
-        // Send AJAX Request to FormSubmit
-        fetch("https://formsubmit.co/ajax/butswave21@gmail.com", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const successMsg =
-              currentLang === "ko"
-                ? "요청이 접수되었습니다.\n\n[중요] 기재하신 이메일로 발송된 '확인 메일'에 답장을 주셔야 처리가 완료됩니다."
-                : "Request received.\n\n[IMPORTANT] You MUST reply to the 'Verification Email' sent to your address to complete the process.";
-            alert(successMsg);
-            form.reset();
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            const errorMsg =
-              currentLang === "ko"
-                ? "전송에 실패했습니다. 잠시 후 다시 시도해주세요."
-                : "Failed to send request. Please try again later.";
-            alert(errorMsg);
-          })
-          .finally(() => {
-            // Reset Loading State
-            submitBtn.disabled = false;
-            loadingSpinner.classList.add("hidden");
-
-            // Restore proper language text
-            const activeLangText = document.querySelector(
-              `.btn-text.lang-text[data-lang="${currentLang}"]`
-            );
-            if (activeLangText) {
-              activeLangText.classList.remove("hidden");
-              activeLangText.classList.remove("opacity-0");
-            }
-          });
+        // If validated, let the form submit naturally to FormSubmit.co
+        const msg =
+          currentLang === "ko"
+            ? "요청이 전송됩니다. 잠시 후 전송 완료 화면에서 '돌아가기'를 기다려주세요."
+            : "Sending request... Please wait for the confirmation screen.";
+        alert(msg);
       });
     </script>
   </body>
