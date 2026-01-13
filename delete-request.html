@@ -86,21 +86,40 @@
               >Account & Data Deletion Request</span
             >
           </h1>
-          <p class="text-gray-400 text-sm leading-relaxed">
+          <p
+            class="text-gray-400 text-sm leading-relaxed text-left inline-block bg-white/5 p-6 rounded-xl border border-white/10"
+          >
             <span class="lang-text lang-transition" data-lang="ko">
-              아래 양식을 작성하여 제출하시면,<br />
-              요청 접수 후
-              <span class="text-red-400 font-bold">7일 이내</span>에 귀하의 계정
-              및 관련 모든 데이터가<br />
-              <span class="text-red-400 font-bold">영구적으로 삭제</span>됩니다.
+              <strong class="text-purple-400 block mb-2 text-lg"
+                >📢 처리 절차 안내</strong
+              >
+              1. 아래 양식을 제출하시면 관리자가 내용을 확인합니다.<br />
+              2. 기재하신 이메일로
+              <strong class="text-white"
+                >본인 확인을 위한 '삭제 확정 메일'</strong
+              >을 보내드립니다.<br />
+              3. 해당 메일에
+              <strong class="text-red-400">회신(답장)을 주셔야</strong>
+              최종적으로 삭제가 진행됩니다.<br />
+              <span class="text-gray-500 mt-2 block text-xs"
+                >※ 본인 확인 메일에 답장을 주지 않으시면 삭제 처리가 진행되지
+                않습니다.</span
+              >
             </span>
             <span class="lang-text lang-transition hidden" data-lang="en">
-              Please submit the form below.<br />
-              Your account and all associated data will be
-              <span class="text-red-400 font-bold">permanently deleted</span
-              ><br />
-              within <span class="text-red-400 font-bold">7 days</span> of
-              receiving the request.
+              <strong class="text-purple-400 block mb-2 text-lg"
+                >📢 Deletion Process</strong
+              >
+              1. Submit the form below.<br />
+              2. We will send a
+              <strong class="text-white">'Verification Email'</strong> to your
+              address.<br />
+              3. You <strong class="text-red-400">MUST reply</strong> to that
+              email to finalize the deletion.<br />
+              <span class="text-gray-500 mt-2 block text-xs"
+                >※ Data will NOT be deleted if you do not reply to the
+                verification email.</span
+              >
             </span>
           </p>
         </div>
@@ -234,14 +253,16 @@
                   class="text-sm text-gray-400 group-hover:text-gray-300 transition-colors"
                 >
                   <span class="lang-text lang-transition" data-lang="ko"
-                    >계정 삭제 시 구매 기록, 사용 내역 등 모든 데이터가
-                    영구적으로 파기되며 복구할 수 없음을 이해했으며 이에
-                    동의합니다.</span
+                    >데이터 영구 파기에 동의하며,
+                    <strong
+                      >이메일로 발송되는 확인 메일에 반드시 답장을 해야
+                      함</strong
+                    >을 이해했습니다.</span
                   >
                   <span class="lang-text lang-transition hidden" data-lang="en"
-                    >I understand and agree that all data, including purchase
-                    history, will be permanently deleted and cannot be
-                    recovered.</span
+                    >I agree to data destruction and understand that I
+                    <strong>MUST reply to the verification email</strong> to
+                    complete the process.</span
                   >
                 </span>
               </label>
@@ -405,8 +426,8 @@
           .then((data) => {
             const successMsg =
               currentLang === "ko"
-                ? "요청이 성공적으로 접수되었습니다.\n7일 이내에 처리됩니다."
-                : "Request submitted successfully.\nIt will be processed within 7 days.";
+                ? "요청이 접수되었습니다.\n\n[중요] 기재하신 이메일로 발송된 '확인 메일'에 답장을 주셔야 처리가 완료됩니다."
+                : "Request received.\n\n[IMPORTANT] You MUST reply to the 'Verification Email' sent to your address to complete the process.";
             alert(successMsg);
             form.reset();
           })
