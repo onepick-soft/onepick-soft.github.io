@@ -247,17 +247,49 @@
               </label>
             </div>
 
+            <!-- Honeypot (Spam protection) -->
+            <input type="text" name="_honey" style="display: none" />
+
+            <!-- Disable Captcha (Optional, remove if you want captcha) -->
+            <input type="hidden" name="_captcha" value="false" />
+
             <button
               type="submit"
-              class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2"
+              id="submitBtn"
+              class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <i data-lucide="trash-2" class="w-5 h-5"></i>
-              <span class="lang-text lang-transition" data-lang="ko"
-                >삭제 요청 메일 보내기</span
+              <span class="btn-text lang-text lang-transition" data-lang="ko"
+                >삭제 요청하기</span
               >
-              <span class="lang-text lang-transition hidden" data-lang="en"
-                >Send Deletion Request</span
+              <span
+                class="btn-text lang-text lang-transition hidden"
+                data-lang="en"
+                >Submit Request</span
               >
+
+              <!-- Loading Spinner (Hidden by default) -->
+              <svg
+                class="animate-spin h-5 w-5 text-white hidden"
+                id="loadingSpinner"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
             </button>
           </form>
         </div>
@@ -312,7 +344,7 @@
             });
             isTransitioning = false;
           });
-        }, 300);
+        }, 300); // 300ms matches CSS transition
       }
 
       langToggleBtn.addEventListener("click", () => {
@@ -320,8 +352,11 @@
         updateLanguage(currentLang);
       });
 
-      // Form Submission
+      // Form Submission (AJAX)
       const form = document.getElementById("deleteForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const btnTexts = document.querySelectorAll(".btn-text");
+      const loadingSpinner = document.getElementById("loadingSpinner");
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -332,6 +367,7 @@
         const email = document.getElementById("email").value.trim();
         const agreement = document.getElementById("agreement").checked;
 
+        // Validation
         if (!agreement) {
           const msg =
             currentLang === "ko"
@@ -341,41 +377,61 @@
           return;
         }
 
-        // Developer Email
-        const recipient = "butswave21@gmail.com";
-        const subject = `[Deletion Request] ${appName}`;
+        // Set Loading State
+        submitBtn.disabled = true;
+        btnTexts.forEach((el) => el.classList.add("hidden"));
+        loadingSpinner.classList.remove("hidden");
 
-        let body = "";
+        // Prepare Data
+        const formData = {
+          _subject: `[계정 삭제 요청] ${appName} - ${email}`,
+          app_name: appName,
+          email: email,
+          request_date: new Date().toLocaleDateString(),
+          message:
+            "상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.\n(I request the permanent deletion of my account and all associated data.)",
+        };
 
-        if (currentLang === "ko") {
-          body = `
-[계정 삭제 및 데이터 파기 요청]
+        // Send AJAX Request to FormSubmit
+        fetch("https://formsubmit.co/ajax/butswave21@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const successMsg =
+              currentLang === "ko"
+                ? "요청이 성공적으로 접수되었습니다.\n7일 이내에 처리됩니다."
+                : "Request submitted successfully.\nIt will be processed within 7 days.";
+            alert(successMsg);
+            form.reset();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            const errorMsg =
+              currentLang === "ko"
+                ? "전송에 실패했습니다. 잠시 후 다시 시도해주세요."
+                : "Failed to send request. Please try again later.";
+            alert(errorMsg);
+          })
+          .finally(() => {
+            // Reset Loading State
+            submitBtn.disabled = false;
+            loadingSpinner.classList.add("hidden");
 
-1. 삭제 대상 앱: ${appName}
-2. 사용자 계정(이메일): ${email}
-3. 요청 일자: ${new Date().toLocaleDateString()}
-
-상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.
-`.trim();
-        } else {
-          body = `
-[Account & Data Deletion Request]
-
-1. Target App: ${appName}
-2. User Account (Email): ${email}
-3. Date of Request: ${new Date().toLocaleDateString()}
-
-I hereby request the deletion of the above account and the permanent destruction of all associated data.
-`.trim();
-        }
-
-        // Create mailto link
-        const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
-          subject
-        )}&body=${encodeURIComponent(body)}`;
-
-        // Open default mail client
-        window.location.href = mailtoLink;
+            // Restore proper language text
+            const activeLangText = document.querySelector(
+              `.btn-text.lang-text[data-lang="${currentLang}"]`
+            );
+            if (activeLangText) {
+              activeLangText.classList.remove("hidden");
+              activeLangText.classList.remove("opacity-0");
+            }
+          });
       });
     </script>
   </body>
