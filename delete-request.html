@@ -461,6 +461,36 @@
           'input[name="App Name"]:checked'
         ).value;
         const email = document.getElementById("email").value.trim();
+
+        // Validation 3: Duplicate Check (LocalStorage)
+        const storageKey = "onepick_deletion_requests";
+        const previousRequests = JSON.parse(
+          localStorage.getItem(storageKey) || "[]"
+        );
+
+        // Check if exists
+        const isDuplicate = previousRequests.some(
+          (req) => req.app === appName && req.email === email
+        );
+
+        if (isDuplicate) {
+          e.preventDefault();
+          const msg =
+            currentLang === "ko"
+              ? "이미 요청된 정보입니다. 처리 결과를 이메일로 확인해주세요."
+              : "Request already submitted. Please check your email for updates.";
+          alert(msg);
+          return;
+        }
+
+        // Save new request to LocalStorage
+        previousRequests.push({
+          app: appName,
+          email: email,
+          date: new Date().toISOString(),
+        });
+        localStorage.setItem(storageKey, JSON.stringify(previousRequests));
+
         document.getElementById(
           "hiddenSubject"
         ).value = `[삭제요청] ${appName} - ${email}`;
