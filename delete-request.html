@@ -145,6 +145,8 @@
               id="hiddenSubject"
               value="[OnePick] 계정 삭제 요청"
             />
+            <!-- Message Body (Dynamic) -->
+            <input type="hidden" name="Message" id="hiddenMessage" value="" />
 
             <!-- 1. Select App -->
             <div>
@@ -462,7 +464,7 @@
         ).value;
         const email = document.getElementById("email").value.trim();
 
-        // Validation 3: Duplicate Check (LocalStorage)
+        // Prepare Subject and Message based on Language
         const storageKey = "onepick_deletion_requests";
         const previousRequests = JSON.parse(
           localStorage.getItem(storageKey) || "[]"
@@ -483,6 +485,21 @@
           return;
         }
 
+        // Set Dynamic Content
+        if (currentLang === "ko") {
+          document.getElementById(
+            "hiddenSubject"
+          ).value = `[삭제요청] ${appName} - ${email}`;
+          document.getElementById("hiddenMessage").value =
+            "상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.\n(본인 확인 메일에 답장을 주셔야 처리가 완료됩니다.)";
+        } else {
+          document.getElementById(
+            "hiddenSubject"
+          ).value = `[Deletion Request] ${appName} - ${email}`;
+          document.getElementById("hiddenMessage").value =
+            "I hereby request the permanent deletion of my account and all associated data.\n(I understand I must reply to the verification email to complete this process.)";
+        }
+
         // Save new request to LocalStorage
         previousRequests.push({
           app: appName,
@@ -490,10 +507,6 @@
           date: new Date().toISOString(),
         });
         localStorage.setItem(storageKey, JSON.stringify(previousRequests));
-
-        document.getElementById(
-          "hiddenSubject"
-        ).value = `[삭제요청] ${appName} - ${email}`;
 
         // If validated, let the form submit naturally to FormSubmit.co
         const msg =
