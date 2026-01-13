@@ -33,6 +33,13 @@
         border-color: #a855f7;
         outline: none;
       }
+      /* Language Fade Transition */
+      .lang-transition {
+        transition: opacity 0.3s ease;
+      }
+      .opacity-0 {
+        opacity: 0;
+      }
     </style>
   </head>
   <body class="min-h-screen flex flex-col">
@@ -40,7 +47,7 @@
     <header
       class="w-full border-b border-white/10 p-6 bg-black/50 backdrop-blur-md fixed top-0 z-50"
     >
-      <div class="max-w-xl mx-auto flex items-center gap-3">
+      <div class="max-w-xl mx-auto flex items-center justify-between">
         <a
           href="index.html"
           class="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -52,6 +59,18 @@
           />
           <span class="font-semibold text-white">OnePick Soft</span>
         </a>
+
+        <!-- Language Switcher -->
+        <button
+          id="lang-toggle"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-sm font-medium text-gray-300 hover:text-white"
+        >
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          <span class="lang-text lang-transition" data-lang="ko">English</span>
+          <span class="lang-text lang-transition hidden" data-lang="en"
+            >한국어</span
+          >
+        </button>
       </div>
     </header>
 
@@ -59,12 +78,30 @@
     <main class="flex-grow pt-32 pb-20 px-6">
       <div class="max-w-xl mx-auto">
         <div class="text-center mb-10">
-          <h1 class="text-3xl font-bold mb-4">계정 삭제 및 데이터 파기 요청</h1>
+          <h1 class="text-3xl font-bold mb-4">
+            <span class="lang-text lang-transition" data-lang="ko"
+              >계정 삭제 및 데이터 파기 요청</span
+            >
+            <span class="lang-text lang-transition hidden" data-lang="en"
+              >Account & Data Deletion Request</span
+            >
+          </h1>
           <p class="text-gray-400 text-sm leading-relaxed">
-            아래 양식을 작성하여 제출하시면,<br />
-            요청 접수 후 <span class="text-red-400 font-bold">7일 이내</span>에
-            귀하의 계정 및 관련 모든 데이터가<br />
-            <span class="text-red-400 font-bold">영구적으로 삭제</span>됩니다.
+            <span class="lang-text lang-transition" data-lang="ko">
+              아래 양식을 작성하여 제출하시면,<br />
+              요청 접수 후
+              <span class="text-red-400 font-bold">7일 이내</span>에 귀하의 계정
+              및 관련 모든 데이터가<br />
+              <span class="text-red-400 font-bold">영구적으로 삭제</span>됩니다.
+            </span>
+            <span class="lang-text lang-transition hidden" data-lang="en">
+              Please submit the form below.<br />
+              Your account and all associated data will be
+              <span class="text-red-400 font-bold">permanently deleted</span
+              ><br />
+              within <span class="text-red-400 font-bold">7 days</span> of
+              receiving the request.
+            </span>
           </p>
         </div>
 
@@ -72,9 +109,15 @@
           <form id="deleteForm" class="space-y-6">
             <!-- 1. Select App -->
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >삭제할 앱 선택 <span class="text-red-500">*</span></label
-              >
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >삭제할 앱 선택 <span class="text-red-500">*</span></span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Select App to Delete
+                  <span class="text-red-500">*</span></span
+                >
+              </label>
               <div class="space-y-3">
                 <label
                   class="flex items-center p-3 rounded-lg border border-white/10 hover:bg-white/5 cursor-pointer transition-colors group"
@@ -93,9 +136,17 @@
                       <i data-lucide="moon" class="w-4 h-4 text-white"></i>
                     </div>
                     <div>
-                      <span class="block text-white font-medium">원픽드림</span>
-                      <span
-                        class="block text-xs text-gray-500 group-hover:text-gray-400"
+                      <span class="block text-white font-medium">
+                        <span class="lang-text lang-transition" data-lang="ko"
+                          >원픽드림</span
+                        >
+                        <span
+                          class="lang-text lang-transition hidden"
+                          data-lang="en"
+                          >OnePick Dream</span
+                        >
+                      </span>
+                      <span class="block text-xs text-gray-400"
                         >OnePick Dream</span
                       >
                     </div>
@@ -118,9 +169,17 @@
                       <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
                     </div>
                     <div>
-                      <span class="block text-white font-medium">원픽타로</span>
-                      <span
-                        class="block text-xs text-gray-500 group-hover:text-gray-400"
+                      <span class="block text-white font-medium">
+                        <span class="lang-text lang-transition" data-lang="ko"
+                          >원픽타로</span
+                        >
+                        <span
+                          class="lang-text lang-transition hidden"
+                          data-lang="en"
+                          >OnePick Tarot</span
+                        >
+                      </span>
+                      <span class="block text-xs text-gray-400"
                         >OnePick Tarot</span
                       >
                     </div>
@@ -134,17 +193,31 @@
               <label
                 for="email"
                 class="block text-sm font-medium text-gray-300 mb-2"
-                >가입한 이메일 주소 <span class="text-red-500">*</span></label
               >
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >가입한 이메일 주소 <span class="text-red-500">*</span></span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >Registered Email Address
+                  <span class="text-red-500">*</span></span
+                >
+              </label>
               <input
                 type="email"
                 id="email"
                 class="input-field w-full px-4 py-3 rounded-xl placeholder-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="예: user@example.com"
+                placeholder="e.g. user@example.com"
                 required
               />
               <p class="text-xs text-gray-500 mt-2 ml-1">
-                * 실제 가입된 계정이 아닐 경우 처리가 불가능할 수 있습니다.
+                <span class="lang-text lang-transition" data-lang="ko"
+                  >* 실제 가입된 계정이 아닐 경우 처리가 불가능할 수
+                  있습니다.</span
+                >
+                <span class="lang-text lang-transition hidden" data-lang="en"
+                  >* Request may be rejected if the email does not match our
+                  records.</span
+                >
               </p>
             </div>
 
@@ -160,8 +233,16 @@
                 <span
                   class="text-sm text-gray-400 group-hover:text-gray-300 transition-colors"
                 >
-                  계정 삭제 시 구매 기록, 사용 내역 등 모든 데이터가 영구적으로
-                  파기되며 복구할 수 없음을 이해했으며 이에 동의합니다.
+                  <span class="lang-text lang-transition" data-lang="ko"
+                    >계정 삭제 시 구매 기록, 사용 내역 등 모든 데이터가
+                    영구적으로 파기되며 복구할 수 없음을 이해했으며 이에
+                    동의합니다.</span
+                  >
+                  <span class="lang-text lang-transition hidden" data-lang="en"
+                    >I understand and agree that all data, including purchase
+                    history, will be permanently deleted and cannot be
+                    recovered.</span
+                  >
                 </span>
               </label>
             </div>
@@ -171,7 +252,12 @@
               class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2"
             >
               <i data-lucide="trash-2" class="w-5 h-5"></i>
-              <span>삭제 요청 메일 보내기</span>
+              <span class="lang-text lang-transition" data-lang="ko"
+                >삭제 요청 메일 보내기</span
+              >
+              <span class="lang-text lang-transition hidden" data-lang="en"
+                >Send Deletion Request</span
+              >
             </button>
           </form>
         </div>
@@ -188,6 +274,53 @@
     <script>
       lucide.createIcons();
 
+      // Language Switcher Logic
+      const langToggleBtn = document.getElementById("lang-toggle");
+      let currentLang = "ko";
+      let isTransitioning = false;
+
+      function updateLanguage(lang) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        const allCurrentText = document.querySelectorAll(
+          `.lang-text:not(.hidden)`
+        );
+        const allNextText = document.querySelectorAll(
+          `.lang-text[data-lang="${lang}"]`
+        );
+
+        // 1. Fade out current text
+        allCurrentText.forEach((el) => el.classList.add("opacity-0"));
+
+        // 2. Wait for fade out, then switch
+        setTimeout(() => {
+          allCurrentText.forEach((el) => {
+            el.classList.add("hidden");
+            el.classList.remove("opacity-0");
+          });
+
+          allNextText.forEach((el) => {
+            el.classList.remove("hidden");
+            el.classList.add("opacity-0");
+          });
+
+          // 3. Small delay then fade in new text
+          requestAnimationFrame(() => {
+            allNextText.forEach((el) => {
+              el.classList.remove("opacity-0");
+            });
+            isTransitioning = false;
+          });
+        }, 300);
+      }
+
+      langToggleBtn.addEventListener("click", () => {
+        currentLang = currentLang === "ko" ? "en" : "ko";
+        updateLanguage(currentLang);
+      });
+
+      // Form Submission
       const form = document.getElementById("deleteForm");
 
       form.addEventListener("submit", (e) => {
@@ -200,15 +333,22 @@
         const agreement = document.getElementById("agreement").checked;
 
         if (!agreement) {
-          alert("데이터 파기 동의에 체크해주세요.");
+          const msg =
+            currentLang === "ko"
+              ? "데이터 파기 동의에 체크해주세요."
+              : "Please check the agreement box.";
+          alert(msg);
           return;
         }
 
         // Developer Email
         const recipient = "butswave21@gmail.com";
-        const subject = `[계정 삭제 요청] ${appName}`;
+        const subject = `[Deletion Request] ${appName}`;
 
-        const body = `
+        let body = "";
+
+        if (currentLang === "ko") {
+          body = `
 [계정 삭제 및 데이터 파기 요청]
 
 1. 삭제 대상 앱: ${appName}
@@ -216,7 +356,18 @@
 3. 요청 일자: ${new Date().toLocaleDateString()}
 
 상기 계정의 서비스 탈퇴 및 개인정보를 포함한 모든 데이터의 영구 삭제를 요청합니다.
-        `.trim();
+`.trim();
+        } else {
+          body = `
+[Account & Data Deletion Request]
+
+1. Target App: ${appName}
+2. User Account (Email): ${email}
+3. Date of Request: ${new Date().toLocaleDateString()}
+
+I hereby request the deletion of the above account and the permanent destruction of all associated data.
+`.trim();
+        }
 
         // Create mailto link
         const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
