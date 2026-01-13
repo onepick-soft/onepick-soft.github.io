@@ -476,6 +476,24 @@
         // Prepare Data
         const formData = {
           _subject: `[계정 삭제 요청] ${appName} - ${email}`,
+          _template: "table", // Format the email nicely
+          _autoresponse: `
+[OnePick Soft] 계정 삭제 확인 메일
+
+안녕하세요, 원픽소프트입니다.
+${appName} 앱의 계정 삭제 요청이 정상적으로 접수되었습니다.
+
+본인 확인 및 최종 처리를 위해, 이 메일에 "삭제 동의"라고 답장(Reply)해 주세요.
+답장이 확인되는 즉시 귀하의 모든 데이터가 영구 삭제됩니다.
+
+(답장이 없으면 삭제 처리가 진행되지 않습니다.)
+
+---
+[Verification Request]
+We received your request to delete your ${appName} account.
+To finalize this process, please REPLY to this email.
+Your data will be permanently deleted upon receiving your reply.
+          `.trim(),
           app_name: appName,
           email: email,
           request_date: new Date().toLocaleDateString(),
