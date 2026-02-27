@@ -73,7 +73,7 @@
     </div>
 
     <!-- Dashboard Main -->
-    <div id="dashboard-screen" class="hidden flex h-screen overflow-hidden">
+    <div id="dashboard-screen" class="hidden h-screen overflow-hidden">
       <!-- Sidebar -->
       <aside class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col">
         <div class="p-6 border-b border-slate-700">
@@ -195,18 +195,28 @@
           id="section-reports"
           class="content-section hidden max-w-5xl mx-auto"
         >
-          <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-            <i data-lucide="flag" class="w-7 h-7 text-red-400"></i>
-            신고 내역 관리
-          </h2>
-          <div
-            class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center"
-          >
-            <i
-              data-lucide="loader"
-              class="w-8 h-8 text-slate-500 animate-spin mx-auto mb-4"
-            ></i>
-            <p class="text-slate-400">데이터를 불러오는 중입니다...</p>
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+              <i data-lucide="flag" class="w-7 h-7 text-red-400"></i>
+              신고 내역 관리
+            </h2>
+            <button
+              onclick="fetchReports()"
+              class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-bold transition-colors"
+            >
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i> 새로고침
+            </button>
+          </div>
+          <div id="reports-container">
+            <div
+              class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center"
+            >
+              <i
+                data-lucide="loader"
+                class="w-8 h-8 text-slate-500 animate-spin mx-auto mb-4"
+              ></i>
+              <p class="text-slate-400">데이터를 불러오는 중입니다...</p>
+            </div>
           </div>
         </section>
 
@@ -215,18 +225,28 @@
           id="section-blacklist"
           class="content-section hidden max-w-5xl mx-auto"
         >
-          <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-            <i data-lucide="users" class="w-7 h-7 text-red-400"></i>
-            블랙리스트 관리
-          </h2>
-          <div
-            class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center"
-          >
-            <i
-              data-lucide="loader"
-              class="w-8 h-8 text-slate-500 animate-spin mx-auto mb-4"
-            ></i>
-            <p class="text-slate-400">데이터를 불러오는 중입니다...</p>
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+              <i data-lucide="users" class="w-7 h-7 text-red-400"></i>
+              블랙리스트 관리
+            </h2>
+            <button
+              onclick="fetchBlacklist()"
+              class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-bold transition-colors"
+            >
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i> 새로고침
+            </button>
+          </div>
+          <div id="blacklist-container">
+            <div
+              class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center"
+            >
+              <i
+                data-lucide="loader"
+                class="w-8 h-8 text-slate-500 animate-spin mx-auto mb-4"
+              ></i>
+              <p class="text-slate-400">데이터를 불러오는 중입니다...</p>
+            </div>
           </div>
         </section>
       </main>
@@ -244,8 +264,15 @@
       import {
         getFirestore,
         doc,
+        collection,
         getDoc,
+        getDocs,
         setDoc,
+        updateDoc,
+        deleteDoc,
+        query,
+        orderBy,
+        where,
       } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
       const firebaseConfig = {
@@ -276,7 +303,9 @@
           if (user.email === MASTER_EMAIL) {
             // 마스터 로그인 성공 시 대시보드 표시
             loginScreen.classList.add("hidden");
+            loginScreen.classList.remove("flex");
             dashboardScreen.classList.remove("hidden");
+            dashboardScreen.classList.add("flex");
             loadConfig();
             isMasterCheckDone = true;
           } else {
@@ -284,14 +313,18 @@
             if (isMasterCheckDone) return; // 중복 알럿 방지
             isMasterCheckDone = true;
             loginScreen.classList.remove("hidden");
+            loginScreen.classList.add("flex");
             dashboardScreen.classList.add("hidden");
+            dashboardScreen.classList.remove("flex");
             alert("관리자 권한이 없습니다. 마스터 계정으로 로그인해주세요.");
             await signOut(auth);
           }
         } else {
           isMasterCheckDone = false; // 로그아웃상태
           loginScreen.classList.remove("hidden");
+          loginScreen.classList.add("flex");
           dashboardScreen.classList.add("hidden");
+          dashboardScreen.classList.remove("flex");
         }
       });
 
@@ -335,8 +368,220 @@
               sec.classList.add("hidden");
             }
           });
+
+          // 섹션 데이터 로드
+          if (targetId === "section-reports") fetchReports();
+          if (targetId === "section-blacklist") fetchBlacklist();
         });
       });
+
+      // ──────────────────────────────────────────
+      // 5. 신고 내역 관리
+      // ──────────────────────────────────────────
+      function formatDate(val) {
+        if (!val) return "-";
+        const d = val?.toDate ? val.toDate() : new Date(val);
+        return d.toLocaleString("ko-KR");
+      }
+
+      window.fetchReports = async function () {
+        const container = document.getElementById("reports-container");
+        container.innerHTML = `<div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center">
+          <div class="w-8 h-8 border-2 border-red-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="text-slate-400">신고 내역 불러오는 중...</p></div>`;
+        try {
+          const q = query(
+            collection(db, "reports"),
+            orderBy("createdAt", "desc"),
+          );
+          const snap = await getDocs(q);
+          const reports = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+          if (reports.length === 0) {
+            container.innerHTML = `<div class="bg-slate-800 p-12 rounded-2xl border border-slate-700 text-center">
+              <p class="text-4xl mb-3">✅</p><p class="text-slate-400">신고 내역이 없습니다.</p></div>`;
+            return;
+          }
+
+          const pending = reports.filter(
+            (r) => r.status === "pending" || !r.status,
+          );
+          const resolved = reports.filter((r) => r.status === "resolved");
+
+          let html = "";
+          if (pending.length > 0) {
+            html += `<p class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">미처리 (${pending.length})</p>`;
+            html += pending.map((r) => renderReportCard(r, false)).join("");
+          }
+          if (resolved.length > 0) {
+            html += `<p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-6 mb-2">처리 완료 (${resolved.length})</p>`;
+            html += resolved.map((r) => renderReportCard(r, true)).join("");
+          }
+          container.innerHTML = `<div class="space-y-3">${html}</div>`;
+        } catch (e) {
+          console.error(e);
+          container.innerHTML = `<div class="bg-slate-800 p-8 rounded-2xl border border-red-500/20 text-center"><p class="text-red-400">⚠️ 불러오기 실패: ${e.message}</p></div>`;
+        }
+      };
+
+      function renderReportCard(r, resolved) {
+        const borderColor = resolved ? "border-slate-700" : "border-red-500/20";
+        const bgColor = resolved ? "bg-slate-800/50" : "bg-slate-800";
+        const typeLabel = r.type === "post" ? "📄 게시글 신고" : "💬 댓글 신고";
+        const resolveBtn = !resolved
+          ? `<button onclick="resolveReport('${r.id}')" class="flex-1 py-2 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-xs font-bold hover:bg-green-500/25 transition-all">✅ 처리 완료</button>`
+          : "";
+        const detailRows = [
+          r.postTitle
+            ? `<p class="text-xs text-slate-400">📝 제목: <span class="text-white/70">${r.postTitle}</span></p>`
+            : "",
+          r.commentContent
+            ? `<p class="text-xs text-slate-400">💬 댓글: <span class="text-white/70">${r.commentContent}</span></p>`
+            : "",
+          r.author
+            ? `<p class="text-xs text-slate-400">✍️ 작성자: <span class="text-white/70">${r.author}</span></p>`
+            : "",
+          r.reporterUid
+            ? `<p class="text-xs text-slate-400">👤 신고자 UID: <span class="text-slate-500 font-mono text-[10px]">${r.reporterUid}</span></p>`
+            : "",
+          r.postId
+            ? `<p class="text-xs text-slate-400">🆔 게시글 ID: <span class="text-slate-500 font-mono text-[10px]">${r.postId}</span></p>`
+            : "",
+        ].join("");
+
+        return `
+          <div class="rounded-2xl border ${borderColor} ${bgColor} overflow-hidden mb-2">
+            <div class="p-4">
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div>
+                  <p class="text-sm font-bold ${
+                    resolved ? "text-white/40" : "text-white"
+                  }">${typeLabel} · ${r.reason || "사유 없음"}</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${formatDate(
+                    r.createdAt,
+                  )}</p>
+                </div>
+                <span class="text-[10px] px-2 py-1 rounded-full font-bold ${
+                  resolved
+                    ? "bg-green-500/10 text-green-400"
+                    : "bg-red-500/10 text-red-400"
+                }">${resolved ? "처리완료" : "미처리"}</span>
+              </div>
+              <div class="space-y-1 mb-3 p-3 bg-black/20 rounded-xl">${detailRows}</div>
+              <div class="flex gap-2">
+                ${resolveBtn}
+                <button onclick="deleteReport('${
+                  r.id
+                }')" class="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-all">🗑️ 삭제</button>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      window.resolveReport = async function (reportId) {
+        if (!confirm("이 신고를 처리 완료로 표시하시겠습니까?")) return;
+        try {
+          await updateDoc(doc(db, "reports", reportId), { status: "resolved" });
+          await fetchReports();
+        } catch (e) {
+          alert("처리 중 오류: " + e.message);
+        }
+      };
+
+      window.deleteReport = async function (reportId) {
+        if (!confirm("이 신고 기록을 영구 삭제하시겠습니까?")) return;
+        try {
+          await deleteDoc(doc(db, "reports", reportId));
+          await fetchReports();
+        } catch (e) {
+          alert("삭제 중 오류: " + e.message);
+        }
+      };
+
+      // ──────────────────────────────────────────
+      // 6. 블랙리스트 관리
+      // ──────────────────────────────────────────
+      window.fetchBlacklist = async function () {
+        const container = document.getElementById("blacklist-container");
+        container.innerHTML = `<div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center">
+          <div class="w-8 h-8 border-2 border-red-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="text-slate-400">블랙리스트 불러오는 중...</p></div>`;
+        try {
+          const q = query(
+            collection(db, "users"),
+            where("blacklistedUntil", "!=", null),
+          );
+          const snap = await getDocs(q);
+          const now = new Date();
+          const users = snap.docs
+            .map((d) => ({ uid: d.id, ...d.data() }))
+            .filter(
+              (u) => u.blacklistedUntil && new Date(u.blacklistedUntil) > now,
+            );
+
+          if (users.length === 0) {
+            container.innerHTML = `<div class="bg-slate-800 p-12 rounded-2xl border border-slate-700 text-center">
+              <p class="text-4xl mb-3">🎉</p><p class="text-slate-400">현재 활성 블랙리스트가 없습니다.</p></div>`;
+            return;
+          }
+
+          const html = users
+            .map(
+              (u) => `
+            <div class="bg-slate-800 border border-red-500/20 rounded-2xl p-4 mb-3">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <p class="font-bold text-white">${
+                    u.nickname || u.displayName || "알 수 없음"
+                  }</p>
+                  <p class="text-[10px] font-mono text-slate-500 truncate">UID: ${
+                    u.uid
+                  }</p>
+                  <p class="text-xs text-red-300/70 mt-1">🚫 사유: ${
+                    u.blacklistReason || "-"
+                  }</p>
+                  <p class="text-xs text-slate-500 mt-0.5">⏱ 해제일: ${formatDate(
+                    u.blacklistedUntil,
+                  )}</p>
+                  ${
+                    u.blacklistContent
+                      ? `<div class="mt-2 p-2 bg-red-500/5 border border-red-500/10 rounded-lg"><p class="text-[11px] text-red-200/60 whitespace-pre-wrap">${u.blacklistContent}</p></div>`
+                      : ""
+                  }
+                </div>
+                <button onclick="liftBan('${u.uid}', '${(
+                u.nickname ||
+                u.displayName ||
+                "유저"
+              ).replace(/'/g, "\\'")}')"
+                  class="flex items-center gap-1.5 px-3 py-2 bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold rounded-xl hover:bg-green-500/30 transition-all flex-shrink-0">
+                  🔓 해제
+                </button>
+              </div>
+            </div>`,
+            )
+            .join("");
+          container.innerHTML = html;
+        } catch (e) {
+          console.error(e);
+          container.innerHTML = `<div class="bg-slate-800 p-8 rounded-2xl border border-red-500/20 text-center"><p class="text-red-400">⚠️ 불러오기 실패: ${e.message}</p></div>`;
+        }
+      };
+
+      window.liftBan = async function (uid, nickname) {
+        if (!confirm(`[${nickname}] 유저의 블랙리스트를 해제하시겠습니까?`))
+          return;
+        try {
+          await updateDoc(doc(db, "users", uid), {
+            blacklistedUntil: null,
+            blacklistReason: null,
+          });
+          alert(`[${nickname}] 블랙리스트가 해제되었습니다.`);
+          await fetchBlacklist();
+        } catch (e) {
+          alert("해제 중 오류: " + e.message);
+        }
+      };
 
       // 4. App Update Config Logic
       const vInput = document.getElementById("config-version");
