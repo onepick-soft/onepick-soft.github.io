@@ -153,7 +153,10 @@
               class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               id="download"
             >
-              <button
+              <a
+                href="https://play.google.com/store/apps/details?id=com.onepicksoft.dream"
+                target="_blank"
+                rel="noopener noreferrer"
                 class="px-8 py-4 bg-white text-black rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
               >
                 <img
@@ -162,7 +165,7 @@
                   alt="Google Play"
                 />
                 <span>Google Play 다운로드</span>
-              </button>
+              </a>
             </div>
           </div>
           <div class="relative animate-on-scroll delay-200 flex justify-center">
@@ -720,16 +723,16 @@
             {
               minVersion: "",
               updateMessage:
-                "새로운 버전이 필요합니다. 스토어에서 업데이트해주세요.",
+                "새로운 버전이 필요합니다.\n스토어에서 업데이트해주세요.",
               storeUrl: "market://details?id=com.onepicksoft.dream",
             },
             { merge: true },
           );
           alert("강제 업데이트 설정이 해제되었습니다.");
           vInput.value = "";
-          mInput.value =
-            "새로운 버전이 필요합니다. 스토어에서 업데이트해주세요.";
-          uInput.value = "market://details?id=com.onepicksoft.dream";
+          (mInput.value =
+            "새로운 버전이 필요합니다.\n스토어에서 업데이트해주세요."),
+            (uInput.value = "market://details?id=com.onepicksoft.dream");
           updateStatusUI(false);
         } catch (e) {
           console.error(e);
