@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>코드플로우 — 집중과 휴식을 위한 사운드 믹서</title>
+  <meta name="description" content="코드플로우(Codeflow)는 카페, 빗소리, 자연, 바이노럴 비트 등 40여 가지 고품질 사운드를 자유롭게 조합하여 나만의 집중 환경을 만들어주는 사운드 믹서 앱입니다." />
+  <meta name="keywords" content="코드플로우, codeflow, 사운드 믹서, 백색소음, 집중, asmr, 빗소리, 카페 소리, 바이노럴, 로파이, ambient, 원픽소프트" />
+  <meta property="og:title" content="코드플로우 — 집중과 휴식을 위한 사운드 믹서" />
+  <meta property="og:description" content="40여 가지 고품질 사운드를 자유롭게 조합하세요. 카페, 빗소리, 자연, 바이노럴 비트까지." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🎧</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #e5e2e1;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: #00fbfb; text-decoration: none; transition: opacity .2s; }
+    a:hover { opacity: .8; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: #00fbfb33; color: #fff; }
+
+    /* ── Utility ──────────────────────────────────────── */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .accent { color: #00fbfb; }
+    .muted { color: rgba(229, 226, 225, .5); }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      border: 1px solid #00fbfb40;
+      color: #00fbfb;
+      border-radius: 2px;
+    }
+
+    /* ── Nav ──────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      background: rgba(10,10,10,.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center;
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .06em; }
+    .nav-logo .material-symbols-outlined { color: #00fbfb; font-size: 20px; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(229,226,225,.5); transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: #00fbfb; opacity: 1; }
+
+    /* ── Hero ─────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(0,251,251,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 30% 70%, rgba(99,102,241,.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 640px; }
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: #00fbfb; }
+    .hero p { font-size: 16px; color: rgba(229,226,225,.55); max-width: 480px; margin: 0 auto 36px; line-height: 1.8; }
+    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px;
+      background: #00fbfb;
+      color: #0a0a0a;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: .06em;
+      border: none; cursor: pointer;
+      transition: all .25s;
+    }
+    .btn-primary:hover { background: #33fcfc; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,251,251,.2); color: #0a0a0a; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      color: #e5e2e1;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: .06em;
+      border: 1px solid rgba(255,255,255,.15);
+      cursor: pointer;
+      transition: all .25s;
+    }
+    .btn-secondary:hover { border-color: #00fbfb; color: #00fbfb; }
+
+    /* ── Section Shared ──────────────────────────────── */
+    section { padding: 100px 0; }
+    .section-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: #00fbfb; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 15px;
+      color: rgba(229,226,225,.5);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
+
+    /* ── Features ─────────────────────────────────────── */
+    #features { border-top: 1px solid rgba(255,255,255,.04); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      padding: 32px 28px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.06);
+      transition: border-color .3s, background .3s;
+    }
+    .feature-card:hover { border-color: rgba(0,251,251,.25); background: rgba(0,251,251,.03); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,251,251,.08);
+      border: 1px solid rgba(0,251,251,.15);
+      margin-bottom: 20px;
+      color: #00fbfb;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; color: rgba(229,226,225,.45); line-height: 1.7; }
+
+    /* ── Sounds ───────────────────────────────────────── */
+    #sounds { border-top: 1px solid rgba(255,255,255,.04); }
+    .sounds-showcase {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .sound-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      font-size: 13px; font-weight: 500;
+      color: rgba(229,226,225,.7);
+      transition: all .2s;
+    }
+    .sound-chip:hover { border-color: #00fbfb40; color: #00fbfb; }
+    .sound-chip .material-symbols-outlined { font-size: 18px; color: #00fbfb; }
+
+    /* ── Presets ──────────────────────────────────────── */
+    #presets { border-top: 1px solid rgba(255,255,255,.04); }
+    .presets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .preset-card {
+      padding: 24px;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; gap: 16px;
+      transition: all .3s;
+    }
+    .preset-card:hover { border-color: rgba(0,251,251,.2); transform: translateY(-2px); }
+    .preset-icon {
+      width: 44px; height: 44px; min-width: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      font-size: 20px;
+    }
+    .preset-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .preset-card p { font-size: 11px; color: rgba(229,226,225,.4); }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      padding: 100px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(0,251,251,.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section .section-title { max-width: 500px; margin: 0 auto 12px; }
+    .cta-section .section-desc { max-width: 420px; margin: 0 auto 32px; }
+
+
+    /* ── Admin Panel ──────────────────────────────────── */
+    .admin-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 9998;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      animation: adminFadeIn .3s ease;
+    }
+    .admin-overlay.active { display: flex; align-items: center; justify-content: center; }
+    @keyframes adminFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes adminSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    .admin-panel {
+      background: #141414;
+      border: 1px solid rgba(255,255,255,.08);
+      width: 90%; max-width: 540px;
+      max-height: 90vh; overflow-y: auto;
+      padding: 36px 32px;
+      animation: adminSlideUp .4s ease;
+    }
+    .admin-panel h2 {
+      font-size: 20px; font-weight: 800;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 6px;
+    }
+    .admin-panel h2 .material-symbols-outlined { color: #f97316; font-size: 24px; }
+    .admin-panel .admin-subtitle { font-size: 12px; color: rgba(229,226,225,.35); margin-bottom: 28px; }
+
+    .admin-field { margin-bottom: 20px; }
+    .admin-field label {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(229,226,225,.45); margin-bottom: 8px;
+    }
+    .admin-field input[type="text"],
+    .admin-field input[type="number"],
+    .admin-field textarea,
+    .admin-field select {
+      width: 100%; padding: 12px 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      color: #e5e2e1; font-family: 'Inter', sans-serif;
+      font-size: 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .admin-field input:focus,
+    .admin-field textarea:focus,
+    .admin-field select:focus { border-color: #f97316; }
+    .admin-field textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+    .admin-field select option { background: #1a1a1a; color: #e5e2e1; }
+
+    .admin-toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px; background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      margin-bottom: 24px;
+    }
+    .admin-toggle-row span { font-size: 14px; font-weight: 600; }
+    .admin-toggle {
+      position: relative; width: 48px; height: 26px;
+      background: rgba(255,255,255,.1); border-radius: 13px;
+      cursor: pointer; transition: background .3s;
+    }
+    .admin-toggle.on { background: #f97316; }
+    .admin-toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 20px; height: 20px; background: #fff;
+      border-radius: 50%; transition: transform .3s;
+    }
+    .admin-toggle.on::after { transform: translateX(22px); }
+
+    .admin-version-row {
+      display: flex; gap: 12px; align-items: flex-end;
+    }
+    .admin-version-row .admin-field { flex: 1; margin-bottom: 0; }
+
+    .admin-actions {
+      display: flex; gap: 10px; margin-top: 28px;
+      padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .admin-btn {
+      flex: 1; padding: 13px 0; font-size: 13px; font-weight: 700;
+      letter-spacing: .04em; cursor: pointer; border: none;
+      font-family: 'Inter', sans-serif; transition: all .2s;
+    }
+    .admin-btn-save {
+      background: #f97316; color: #fff;
+    }
+    .admin-btn-save:hover { background: #fb923c; transform: translateY(-1px); }
+    .admin-btn-cancel {
+      background: rgba(255,255,255,.06); color: rgba(229,226,225,.6);
+    }
+    .admin-btn-cancel:hover { background: rgba(255,255,255,.1); }
+    .admin-btn-delete {
+      background: rgba(239,68,68,.15); color: #ef4444;
+    }
+    .admin-btn-delete:hover { background: rgba(239,68,68,.25); }
+
+    .admin-status {
+      margin-top: 16px; padding: 10px 14px;
+      font-size: 12px; font-weight: 600;
+      display: none;
+    }
+    .admin-status.success { display: block; background: rgba(34,197,94,.1); color: #22c55e; border: 1px solid rgba(34,197,94,.2); }
+    .admin-status.error { display: block; background: rgba(239,68,68,.1); color: #ef4444; border: 1px solid rgba(239,68,68,.2); }
+
+    .admin-current-info {
+      margin-bottom: 24px; padding: 14px 16px;
+      background: rgba(249,115,22,.06);
+      border: 1px solid rgba(249,115,22,.15);
+      font-size: 12px; color: rgba(229,226,225,.5);
+      line-height: 1.8;
+    }
+    .admin-current-info strong { color: #f97316; font-weight: 700; }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 48px 0 36px;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
+    .footer-brand .nav-logo { margin-bottom: 8px; }
+    .footer-brand p { font-size: 12px; color: rgba(229,226,225,.35); max-width: 280px; }
+    .footer-links { display: flex; gap: 40px; flex-wrap: wrap; }
+    .footer-links-col h5 { font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(229,226,225,.3); margin-bottom: 12px; }
+    .footer-links-col a { display: block; font-size: 13px; color: rgba(229,226,225,.45); margin-bottom: 8px; }
+    .footer-links-col a:hover { color: #00fbfb; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.04);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 11px; color: rgba(229,226,225,.25); }
+    .footer-biz { font-size: 11px; color: rgba(229,226,225,.2); line-height: 1.8; }
+
+    /* ── Scroll Animations ────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .hero p { font-size: 14px; }
+      section { padding: 64px 0; }
+      .footer-top { flex-direction: column; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <div class="container">
+      <div class="nav-logo">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">tune</span>
+        코드플로우
+      </div>
+      <div class="nav-links">
+        <a href="#features">기능</a>
+        <a href="#sounds">사운드</a>
+        <a href="#presets">추천 믹스</a>
+        <a href="terms.html" target="_blank">이용약관</a>
+        <a href="privacy.html" target="_blank">개인정보</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-content fade-in">
+      <span class="badge">무료 · 광고 기반</span>
+      <h1 style="margin-top:20px">당신만의<br><span>사운드 믹서</span></h1>
+      <p>카페 소리, 빗소리, 바이노럴 비트까지—<br>40여 가지 고품질 사운드를 자유롭게 조합하여<br>완벽한 집중 환경을 만드세요.</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn-primary" onclick="return false;">
+          <span class="material-symbols-outlined" style="font-size:18px">download</span>
+          Google Play 다운로드
+        </a>
+        <a href="#features" class="btn-secondary">
+          <span class="material-symbols-outlined" style="font-size:18px">arrow_downward</span>
+          더 알아보기
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES ═══ -->
+  <section id="features">
+    <div class="container">
+      <div class="fade-in">
+        <p class="section-label">Features</p>
+        <h2 class="section-title">집중의 기술,<br>코드플로우가 설계합니다</h2>
+        <p class="section-desc">개발자, 디자이너, 학생, 직장인 모두를 위한 프리미엄 앰비언트 사운드 믹서입니다.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">tune</span>
+          </div>
+          <h3>자유로운 믹싱</h3>
+          <p>최대 6개의 사운드를 동시에 재생하고, 개별 볼륨을 세밀하게 조절하여 나만의 사운드스케이프를 완성하세요.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">queue_music</span>
+          </div>
+          <h3>추천 믹스 & 내 믹스</h3>
+          <p>집중, 수면, 명상 등 8가지 테마별 추천 믹스를 원클릭으로 적용하거나, 나만의 믹스를 저장하고 공유하세요.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">public</span>
+          </div>
+          <h3>믹스 허브</h3>
+          <p>전 세계 사용자들이 공유한 인기 믹스를 탐험하세요. 마음에 드는 조합을 발견하면 바로 적용할 수 있습니다.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">bar_chart</span>
+          </div>
+          <h3>집중 통계</h3>
+          <p>오늘의 집중 시간, 가장 많이 들은 믹스, 주간 흐름을 한눈에 확인하고 생산성을 관리하세요.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">headphones</span>
+          </div>
+          <h3>40+ 프리미엄 사운드</h3>
+          <p>카페, 도서관, 빗소리, 장작불, 바이노럴 비트, 로파이 음악까지 — 전문 녹음된 고품질 사운드만 엄선했습니다.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <span class="material-symbols-outlined">phone_android</span>
+          </div>
+          <h3>백그라운드 재생</h3>
+          <p>앱을 닫아도, 화면이 꺼져도 사운드는 계속됩니다. 안드로이드 상태바에서 바로 제어할 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SOUNDS ═══ -->
+  <section id="sounds">
+    <div class="container">
+      <div class="fade-in">
+        <p class="section-label">Sound Library</p>
+        <h2 class="section-title">40여 가지 사운드,<br>6가지 카테고리</h2>
+        <p class="section-desc">환경, 자연, 동물, 도구, 음악, 바이노럴 — 모든 순간에 어울리는 사운드를 찾아보세요.</p>
+      </div>
+      <div class="sounds-showcase fade-in">
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">coffee</span>카페 분위기</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_library</span>공공 도서관</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">water_drop</span>빗소리 (차 안)</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_fire_department</span>장작 벽난로</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">forest</span>새벽 정원</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">waves</span>시냇물</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">keyboard</span>키보드 타건</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">airplanemode_active</span>비행기 내부</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">music_note</span>Lo-fi 음악</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">graphic_eq</span>바이노럴 비트</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">ac_unit</span>눈보라</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">water</span>수중 공간</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">pets</span>고양이 골골</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">storage</span>서버실 팬</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">edit</span>연필 필기</div>
+        <div class="sound-chip"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">favorite</span>심장 박동</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRESETS ═══ -->
+  <section id="presets">
+    <div class="container">
+      <div class="fade-in">
+        <p class="section-label">Recommended Mixes</p>
+        <h2 class="section-title">원클릭 추천 믹스</h2>
+        <p class="section-desc">목적에 맞는 사운드 조합을 한 번의 탭으로 시작하세요.</p>
+      </div>
+      <div class="presets-grid fade-in">
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(96,165,250,.15);color:#60a5fa"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">bolt</span></div>
+          <div><h4>집중</h4><p>브라운 스위치 + 로파이 + 우주 주파수</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(167,139,250,.15);color:#a78bfa"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">spa</span></div>
+          <div><h4>휴식</h4><p>차 안 빗소리 + 새벽 정원 + 귀뚜라미</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(251,146,60,.15);color:#fb923c"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">coffee</span></div>
+          <div><h4>공부</h4><p>도서관 + 로파이 R&B + 연필 + 책장</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(250,204,21,.15);color:#facc15"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">lightbulb</span></div>
+          <div><h4>창의</h4><p>벽난로 + 빗속 주파수</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(56,189,248,.15);color:#38bdf8"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">bedtime</span></div>
+          <div><h4>수면</h4><p>비행기 + HDD 돌아가는 소리 + 혹등고래</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(74,222,128,.15);color:#4ade80"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">forest</span></div>
+          <div><h4>자연</h4><p>새벽 정원 + 시냇물</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(244,114,182,.15);color:#f472b6"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">self_improvement</span></div>
+          <div><h4>명상</h4><p>싱잉볼 주파수 + 수중 공간 + 시냇물</p></div>
+        </div>
+        <div class="preset-card">
+          <div class="preset-icon" style="background:rgba(248,113,113,.15);color:#f87171"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">menu_book</span></div>
+          <div><h4>독서</h4><p>서버실 + 창밖 빗소리 + 로파이</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-section">
+    <div class="container fade-in">
+      <span class="badge">Free Download</span>
+      <h2 class="section-title" style="margin-top:20px">지금 바로 시작하세요</h2>
+      <p class="section-desc">첫 24시간은 모든 기능을 무료로 체험할 수 있습니다.<br>이후에도 하루에 광고 한 번이면 모든 사운드를 이용할 수 있습니다.</p>
+      <a href="#" class="btn-primary" onclick="return false;">
+        <span class="material-symbols-outlined" style="font-size:18px">download</span>
+        Google Play에서 다운로드
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ ADMIN PANEL (Hidden) ═══ -->
+  <div class="admin-overlay" id="adminOverlay">
+    <div class="admin-panel">
+      <h2>
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+        공지 관리
+      </h2>
+      <p class="admin-subtitle">특정 앱 버전 이하 사용자에게 전체 공지를 표시합니다</p>
+
+      <div class="admin-current-info" id="adminCurrentInfo">
+        현재 상태를 불러오는 중...
+      </div>
+
+      <div class="admin-toggle-row">
+        <span>공지 활성화</span>
+        <div class="admin-toggle" id="adminToggle" onclick="toggleAdminSwitch()"></div>
+      </div>
+
+      <div class="admin-field">
+        <label>공지 유형</label>
+        <select id="adminType">
+          <option value="info">ℹ️ 안내 (Info)</option>
+          <option value="update">🔄 업데이트 권장 (Update)</option>
+          <option value="warning">⚠️ 경고 (Warning)</option>
+          <option value="critical">🚨 긴급 (Critical — 앱 사용 차단)</option>
+        </select>
+      </div>
+
+      <div class="admin-field">
+        <label>공지 제목</label>
+        <input type="text" id="adminTitle" placeholder="예: 업데이트 안내" />
+      </div>
+
+      <div class="admin-field">
+        <label>공지 내용</label>
+        <textarea id="adminMessage" placeholder="공지 메시지를 입력하세요..."></textarea>
+      </div>
+
+      <div class="admin-version-row">
+        <div class="admin-field">
+          <label>최소 버전 (이 버전 미만에 공지)</label>
+          <input type="text" id="adminMinVersion" placeholder="예: 1.2.0" />
+        </div>
+      </div>
+
+      <div class="admin-field" style="margin-top:20px">
+        <label>액션 버튼 텍스트 (선택사항)</label>
+        <input type="text" id="adminBtnText" placeholder="예: 업데이트하기" />
+      </div>
+
+      <div class="admin-field">
+        <label>액션 URL (선택사항)</label>
+        <input type="text" id="adminBtnUrl" placeholder="예: https://play.google.com/store/apps/..." />
+      </div>
+
+      <div class="admin-actions">
+        <button class="admin-btn admin-btn-cancel" onclick="closeAdmin()">닫기</button>
+        <button class="admin-btn admin-btn-delete" onclick="deleteAnnouncement()">초기화</button>
+        <button class="admin-btn admin-btn-save" onclick="saveAnnouncement()">저장</button>
+      </div>
+
+      <div class="admin-status" id="adminStatus"></div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">tune</span>
+            코드플로우
+          </div>
+          <p>집중과 휴식을 위한 사운드 믹서.<br>당신만의 완벽한 사운드스케이프를 만드세요.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-links-col">
+            <h5>서비스</h5>
+            <a href="#features">기능 소개</a>
+            <a href="#sounds">사운드 라이브러리</a>
+            <a href="#presets">추천 믹스</a>
+          </div>
+          <div class="footer-links-col">
+            <h5>법적 고지</h5>
+            <a href="terms.html" target="_blank">서비스 이용약관</a>
+            <a href="privacy.html" target="_blank">개인정보처리방침</a>
+          </div>
+          <div class="footer-links-col">
+            <h5>문의</h5>
+            <a href="mailto:onepicksoft@gmail.com">onepicksoft@gmail.com</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 <span id="adminTrigger" style="cursor:pointer;transition:color .2s">원픽소프트</span>. All rights reserved.</p>
+        <div class="footer-biz">
+          상호: 원픽소프트 · 대표: 이정빈 · 사업자등록번호: 571-56-00945<br>
+          통신판매업신고: 2026-인천부평-0026호
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ Firebase SDK (CDN) ═══ -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <!-- ═══ Scroll Animation Script ═══ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+      // Nav active state
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const top = section.offsetTop - 100;
+          if (window.scrollY >= top) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      });
+    });
+  </script>
+
+  <!-- ═══ Admin Panel Script ═══ -->
+  <script>
+    // ── Firebase 초기화 ──
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkBcW13TDhubT9fZ0lyl-VJdrkkhZz9TM",
+      authDomain: "code-flow-35436.firebaseapp.com",
+      projectId: "code-flow-35436",
+      storageBucket: "code-flow-35436.firebasestorage.app",
+      messagingSenderId: "890931292479",
+      appId: "1:890931292479:web:3d6c1c6c3ed0710c8d4b8a",
+      measurementId: "G-J59W3SZCLD"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const authInstance = firebase.auth();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    // ── 마스터 계정 ──
+    const MASTER_EMAIL = 'onepicksoft@gmail.com';
+    let currentAdminUser = null;
+
+    // ── 어드민 패널 열기/닫기 ──
+    let adminOpen = false;
+
+    function openAdmin() {
+      document.getElementById('adminOverlay').classList.add('active');
+      adminOpen = true;
+      loadCurrentAnnouncement();
+    }
+
+    function closeAdmin() {
+      document.getElementById('adminOverlay').classList.remove('active');
+      adminOpen = false;
+      clearStatus();
+    }
+
+    // 오버레이 클릭으로 닫기
+    document.getElementById('adminOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeAdmin();
+    });
+
+    // ── "원픽소프트" 클릭 → Google 로그인 → 마스터면 패널 열기 ──
+    const adminTrigger = document.getElementById('adminTrigger');
+    adminTrigger.addEventListener('click', async () => {
+      // 이미 로그인된 마스터 계정이면 바로 패널 열기
+      if (currentAdminUser && currentAdminUser.email === MASTER_EMAIL) {
+        openAdmin();
+        return;
+      }
+
+      try {
+        const result = await authInstance.signInWithPopup(googleProvider);
+        const user = result.user;
+
+        if (user.email === MASTER_EMAIL) {
+          currentAdminUser = user;
+          adminTrigger.style.color = '#f97316';
+          adminTrigger.title = '관리자 모드 (클릭하면 관리 패널 열기)';
+          openAdmin();
+        } else {
+          // 마스터 계정이 아니면 로그아웃
+          await authInstance.signOut();
+          alert('관리자 권한이 없는 계정입니다.');
+        }
+      } catch (err) {
+        if (err.code !== 'auth/popup-closed-by-user') {
+          console.error('Login error:', err);
+        }
+      }
+    });
+
+    // ── 페이지 로드 시 로그인 상태 복원 ──
+    authInstance.onAuthStateChanged((user) => {
+      if (user && user.email === MASTER_EMAIL) {
+        currentAdminUser = user;
+        adminTrigger.style.color = '#f97316';
+        adminTrigger.title = '관리자 모드 (클릭하면 관리 패널 열기)';
+      } else {
+        currentAdminUser = null;
+        adminTrigger.style.color = '';
+        adminTrigger.title = '';
+      }
+    });
+
+    // ── 토글 스위치 ──
+    let announcementEnabled = false;
+
+    function toggleAdminSwitch() {
+      announcementEnabled = !announcementEnabled;
+      const toggle = document.getElementById('adminToggle');
+      toggle.classList.toggle('on', announcementEnabled);
+    }
+
+    // ── 현재 공지 상태 로드 ──
+    async function loadCurrentAnnouncement() {
+      const infoEl = document.getElementById('adminCurrentInfo');
+      try {
+        const doc = await db.collection('appConfig').doc('announcement').get();
+        if (doc.exists) {
+          const data = doc.data();
+          announcementEnabled = data.enabled || false;
+          document.getElementById('adminToggle').classList.toggle('on', announcementEnabled);
+          document.getElementById('adminType').value = data.type || 'info';
+          document.getElementById('adminTitle').value = data.title || '';
+          document.getElementById('adminMessage').value = data.message || '';
+          document.getElementById('adminMinVersion').value = data.minVersion || '';
+          document.getElementById('adminBtnText').value = data.actionButtonText || '';
+          document.getElementById('adminBtnUrl').value = data.actionUrl || '';
+
+          const typeLabels = { info: '안내', update: '업데이트 권장', warning: '경고', critical: '긴급' };
+          const statusText = data.enabled ? '🟢 활성' : '🔴 비활성';
+          infoEl.innerHTML = `
+            <strong>현재 상태:</strong> ${statusText}<br>
+            <strong>유형:</strong> ${typeLabels[data.type] || data.type}<br>
+            <strong>제목:</strong> ${data.title || '(없음)'}<br>
+            <strong>최소 버전:</strong> ${data.minVersion || '(미설정)'}<br>
+            <strong>마지막 수정:</strong> ${data.updatedAt ? new Date(data.updatedAt.seconds * 1000).toLocaleString('ko-KR') : '(알 수 없음)'}
+          `;
+        } else {
+          infoEl.innerHTML = '<strong>현재 상태:</strong> 설정된 공지가 없습니다.';
+          announcementEnabled = false;
+          document.getElementById('adminToggle').classList.remove('on');
+          document.getElementById('adminType').value = 'info';
+          document.getElementById('adminTitle').value = '';
+          document.getElementById('adminMessage').value = '';
+          document.getElementById('adminMinVersion').value = '';
+          document.getElementById('adminBtnText').value = '';
+          document.getElementById('adminBtnUrl').value = '';
+        }
+      } catch (err) {
+        infoEl.innerHTML = '<strong style="color:#ef4444">⚠ 데이터를 불러올 수 없습니다.</strong><br>' + err.message;
+      }
+    }
+
+    // ── 공지 저장 ──
+    async function saveAnnouncement() {
+      const title = document.getElementById('adminTitle').value.trim();
+      const message = document.getElementById('adminMessage').value.trim();
+      const minVersion = document.getElementById('adminMinVersion').value.trim();
+      const type = document.getElementById('adminType').value;
+      const actionButtonText = document.getElementById('adminBtnText').value.trim();
+      const actionUrl = document.getElementById('adminBtnUrl').value.trim();
+
+      if (!title) return showStatus('error', '공지 제목을 입력하세요.');
+      if (!message) return showStatus('error', '공지 내용을 입력하세요.');
+      if (!minVersion) return showStatus('error', '최소 버전을 입력하세요. (예: 1.2.0)');
+      if (!/^\d+\.\d+\.\d+$/.test(minVersion)) return showStatus('error', '버전 형식이 올바르지 않습니다. (예: 1.2.0)');
+
+      try {
+        await db.collection('appConfig').doc('announcement').set({
+          enabled: announcementEnabled,
+          type,
+          title,
+          message,
+          minVersion,
+          actionButtonText: actionButtonText || null,
+          actionUrl: actionUrl || null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showStatus('success', '✅ 공지가 성공적으로 저장되었습니다!');
+        loadCurrentAnnouncement();
+      } catch (err) {
+        showStatus('error', '저장 실패: ' + err.message);
+      }
+    }
+
+    // ── 공지 초기화(삭제) ──
+    async function deleteAnnouncement() {
+      if (!confirm('정말 공지를 초기화하시겠습니까?\n모든 설정이 삭제됩니다.')) return;
+      try {
+        await db.collection('appConfig').doc('announcement').set({
+          enabled: false,
+          type: 'info',
+          title: '',
+          message: '',
+          minVersion: '',
+          actionButtonText: null,
+          actionUrl: null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showStatus('success', '✅ 공지가 초기화되었습니다.');
+        loadCurrentAnnouncement();
+      } catch (err) {
+        showStatus('error', '초기화 실패: ' + err.message);
+      }
+    }
+
+    // ── 상태 메시지 ──
+    function showStatus(type, msg) {
+      const el = document.getElementById('adminStatus');
+      el.className = 'admin-status ' + type;
+      el.textContent = msg;
+      setTimeout(() => { el.className = 'admin-status'; el.textContent = ''; }, 4000);
+    }
+    function clearStatus() {
+      const el = document.getElementById('adminStatus');
+      el.className = 'admin-status'; el.textContent = '';
+    }
+  </script>
+</body>
+</html>
