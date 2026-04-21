@@ -298,6 +298,40 @@
     }
     .admin-version-row .admin-field { flex: 1; margin-bottom: 0; }
 
+    /* admin menu tabs */
+    .admin-tabs {
+      display: flex; gap: 4px; margin-bottom: 24px;
+      padding: 4px; background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .admin-tab {
+      flex: 1; padding: 10px; text-align: center;
+      font-size: 11px; font-weight: 700; color: rgba(229,226,225,.4);
+      cursor: pointer; transition: all .2s; border-radius: 2px;
+    }
+    .admin-tab.active { background: #f97316; color: #fff; }
+    .admin-tab:hover:not(.active) { color: #e5e2e1; background: rgba(255,255,255,.05); }
+
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    /* sound list styles */
+    .admin-sound-list {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-top: 16px; max-height: 400px; overflow-y: auto;
+      padding-right: 8px;
+    }
+    .admin-sound-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .admin-sound-info { display: flex; align-items: center; gap: 12px; }
+    .admin-sound-info .material-symbols-outlined { color: #00fbfb; font-size: 20px; }
+    .admin-sound-info div { display: flex; flex-direction: column; }
+    .admin-sound-info span { font-size: 13px; font-weight: 600; }
+    .admin-sound-info small { font-size: 10px; color: rgba(229,226,225,.3); }
+
     .admin-actions {
       display: flex; gap: 10px; margin-top: 28px;
       padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06);
@@ -563,62 +597,93 @@
   <!-- ═══ ADMIN PANEL (Hidden) ═══ -->
   <div class="admin-overlay" id="adminOverlay">
     <div class="admin-panel">
-      <h2>
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
-        공지 관리
-      </h2>
-      <p class="admin-subtitle">특정 앱 버전 이하 사용자에게 전체 공지를 표시합니다</p>
-
-      <div class="admin-current-info" id="adminCurrentInfo">
-        현재 상태를 불러오는 중...
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <h2 style="margin-bottom:0">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+          관리자 메뉴
+        </h2>
+        <button class="admin-tab" onclick="closeAdmin()" style="flex:none; padding:4px 8px; cursor:pointer; background:none; border:none; color:rgba(255,255,255,0.3)">
+          <span class="material-symbols-outlined">close</span>
+        </button>
       </div>
 
-      <div class="admin-toggle-row">
-        <span>공지 활성화</span>
-        <div class="admin-toggle" id="adminToggle" onclick="toggleAdminSwitch()"></div>
+      <div class="admin-tabs">
+        <div class="admin-tab active" id="tabAnnounce" onclick="switchAdminTab('announce')">공지 관리</div>
+        <div class="admin-tab" id="tabSounds" onclick="switchAdminTab('sounds')">음원 프리미엄 설정</div>
       </div>
 
-      <div class="admin-field">
-        <label>공지 유형</label>
-        <select id="adminType">
-          <option value="info">ℹ️ 안내 (Info)</option>
-          <option value="update">🔄 업데이트 권장 (Update)</option>
-          <option value="warning">⚠️ 경고 (Warning)</option>
-          <option value="critical">🚨 긴급 (Critical — 앱 사용 차단)</option>
-        </select>
-      </div>
+      <!-- Section: Announcement -->
+      <div id="sectionAnnounce" class="admin-section active">
+        <p class="admin-subtitle">특정 앱 버전 이하 사용자에게 전체 공지를 표시합니다</p>
+        
+        <div class="admin-current-info" id="adminCurrentInfo">
+          현재 상태를 불러오는 중...
+        </div>
 
-      <div class="admin-field">
-        <label>공지 제목</label>
-        <input type="text" id="adminTitle" placeholder="예: 업데이트 안내" />
-      </div>
+        <div class="admin-toggle-row">
+          <span>공지 활성화</span>
+          <div class="admin-toggle" id="adminToggle" onclick="toggleAdminSwitch()"></div>
+        </div>
 
-      <div class="admin-field">
-        <label>공지 내용</label>
-        <textarea id="adminMessage" placeholder="공지 메시지를 입력하세요..."></textarea>
-      </div>
-
-      <div class="admin-version-row">
         <div class="admin-field">
-          <label>최소 버전 (이 버전 미만에 공지)</label>
-          <input type="text" id="adminMinVersion" placeholder="예: 1.2.0" />
+          <label>공지 유형</label>
+          <select id="adminType">
+            <option value="info">ℹ️ 안내 (Info)</option>
+            <option value="update">🔄 업데이트 권장 (Update)</option>
+            <option value="warning">⚠️ 경고 (Warning)</option>
+            <option value="critical">🚨 긴급 (Critical — 앱 사용 차단)</option>
+          </select>
+        </div>
+
+        <div class="admin-field">
+          <label>공지 제목</label>
+          <input type="text" id="adminTitle" placeholder="예: 업데이트 안내" />
+        </div>
+
+        <div class="admin-field">
+          <label>공지 내용</label>
+          <textarea id="adminMessage" placeholder="공지 메시지를 입력하세요..."></textarea>
+        </div>
+
+        <div class="admin-version-row">
+          <div class="admin-field">
+            <label>최소 버전 (이 버전 미만에 공지)</label>
+            <input type="text" id="adminMinVersion" placeholder="예: 1.2.0" />
+          </div>
+        </div>
+
+        <div class="admin-field" style="margin-top:20px">
+          <label>액션 버튼 텍스트 (선택사항)</label>
+          <input type="text" id="adminBtnText" placeholder="예: 업데이트하기" />
+        </div>
+
+        <div class="admin-field">
+          <label>액션 URL (선택사항)</label>
+          <input type="text" id="adminBtnUrl" placeholder="예: https://play.google.com/apps/internaltest/..." />
+        </div>
+
+        <div class="admin-actions">
+          <button class="admin-btn admin-btn-cancel" onclick="closeAdmin()">닫기</button>
+          <button class="admin-btn admin-btn-delete" onclick="deleteAnnouncement()">초기화</button>
+          <button class="admin-btn admin-btn-save" onclick="saveAnnouncement()">저장</button>
         </div>
       </div>
 
-      <div class="admin-field" style="margin-top:20px">
-        <label>액션 버튼 텍스트 (선택사항)</label>
-        <input type="text" id="adminBtnText" placeholder="예: 업데이트하기" />
-      </div>
+      <!-- Section: Sound Settings -->
+      <div id="sectionSounds" class="admin-section">
+        <p class="admin-subtitle">음원별 프리미엄(유료) 여부를 강제 설정합니다. (Firestore 반영)</p>
+        
+        <div class="admin-field" style="margin-bottom:12px">
+            <input type="text" id="soundSearch" placeholder="음원 이름 검색..." oninput="filterAdminSounds()" style="font-size:12px; padding:10px" />
+        </div>
 
-      <div class="admin-field">
-        <label>액션 URL (선택사항)</label>
-        <input type="text" id="adminBtnUrl" placeholder="예: https://play.google.com/apps/internaltest/..." />
-      </div>
+        <div class="admin-sound-list" id="adminSoundList">
+          <!-- Sounds will be loaded here -->
+        </div>
 
-      <div class="admin-actions">
-        <button class="admin-btn admin-btn-cancel" onclick="closeAdmin()">닫기</button>
-        <button class="admin-btn admin-btn-delete" onclick="deleteAnnouncement()">초기화</button>
-        <button class="admin-btn admin-btn-save" onclick="saveAnnouncement()">저장</button>
+        <div class="admin-actions">
+          <button class="admin-btn admin-btn-cancel" onclick="closeAdmin()">닫기</button>
+        </div>
       </div>
 
       <div class="admin-status" id="adminStatus"></div>
@@ -725,6 +790,7 @@
     function openAdmin() {
       document.getElementById('adminOverlay').classList.add('active');
       adminOpen = true;
+      switchAdminTab('announce');
       loadCurrentAnnouncement();
     }
 
@@ -734,10 +800,132 @@
       clearStatus();
     }
 
+    // 탭 전환
+    function switchAdminTab(tab) {
+      document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+
+      if (tab === 'announce') {
+        document.getElementById('tabAnnounce').classList.add('active');
+        document.getElementById('sectionAnnounce').classList.add('active');
+        loadCurrentAnnouncement();
+      } else {
+        document.getElementById('tabSounds').classList.add('active');
+        document.getElementById('sectionSounds').classList.add('active');
+        loadAdminSounds();
+      }
+    }
+
     // 오버레이 클릭으로 닫기
     document.getElementById('adminOverlay').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeAdmin();
     });
+
+    // ── 음원 프리미엄 설정 로직 ──
+    let allSounds = []; // sounds.js에서 가져올 전체 리스트 (임시 하드코딩 또는 API 필요)
+    let premiumConfig = {}; // Firestore에서 가져올 설정들 (forcePremium: { [id]: true/false })
+
+    // homepage에서 sounds.js를 직접 임포트할 수 없으므로, 간단한 리스트를 정의하거나 Firestore에서 목록을 가져와야 함.
+    // 여기서는 앱의 핵심 음원들을 로드합니다 (실제 운영시에는 Firestore appConfig/sounds 에 목록 관리 권장)
+    const CORE_SOUNDS = [
+      {id: "cafe", label: "카페 분위기", icon: "coffee"},
+      {id: "library", label: "공공 도서관", icon: "local_library"},
+      {id: "airplane", label: "비행기 내부", icon: "airplanemode_active"},
+      {id: "espresso", label: "에스프레소", icon: "water_drop"},
+      {id: "rain_window", label: "창가 빗소리", icon: "rainy"},
+      {id: "rain_car", label: "차 안 빗소리", icon: "directions_car"},
+      {id: "thunder", label: "천둥 소리", icon: "thunderstorm"},
+      {id: "fireplace", label: "벽난로 장작", icon: "local_fire_department"},
+      {id: "blue_switch", label: "청축 키보드", icon: "keyboard"},
+      {id: "brown_switch", label: "갈축 키보드", icon: "keyboard_command_key"},
+      {id: "red_switch", label: "적축 키보드", icon: "keyboard_tab"},
+      {id: "lofi1", label: "정적 브레인", icon: "headset"},
+      {id: "lofi2", label: "자갈길 꿈", icon: "headphones"}
+      // ... 필요한 만큼 추가
+    ];
+
+    async function loadAdminSounds() {
+      const listEl = document.getElementById('adminSoundList');
+      listEl.innerHTML = '<div style="padding:20px; text-align:center; color:rgba(255,255,255,0.3)">설정 로딩 중...</div>';
+
+      try {
+        const doc = await db.collection('appConfig').doc('soundPremium').get();
+        premiumConfig = doc.exists ? (doc.data().overrides || {}) : {};
+        
+        renderAdminSounds(CORE_SOUNDS);
+      } catch (err) {
+        listEl.innerHTML = '<div style="padding:20px; color:#ef4444">로딩 실패: ' + err.message + '</div>';
+      }
+    }
+
+    function renderAdminSounds(sounds) {
+      const listEl = document.getElementById('adminSoundList');
+      listEl.innerHTML = '';
+
+      sounds.forEach(sound => {
+        const isForcedPremium = premiumConfig[sound.id] === true;
+        const isForcedFree = premiumConfig[sound.id] === false;
+
+        // null이면 기본 설정, true/false면 강제 설정
+        let statusLabel = '<small style="color:rgba(255,255,255,0.2)">기본 설정</small>';
+        if (isForcedPremium) statusLabel = '<small style="color:#f97316">강제 프리미엄</small>';
+        if (isForcedFree) statusLabel = '<small style="color:#22c55e">강제 무료</small>';
+
+        const item = document.createElement('div');
+        item.className = 'admin-sound-item';
+        item.innerHTML = `
+          <div class="admin-sound-info">
+            <span class="material-symbols-outlined">${sound.icon}</span>
+            <div>
+              <span>${sound.label}</span>
+              ${statusLabel}
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center">
+             <select onchange="updateSoundPremium('${sound.id}', this.value)" style="padding:4px 8px; font-size:11px; width:100px; background:rgba(255,255,255,0.05)">
+                <option value="default" ${premiumConfig[sound.id] === undefined ? 'selected' : ''}>기본값</option>
+                <option value="premium" ${isForcedPremium ? 'selected' : ''}>프리미엄</option>
+                <option value="free" ${isForcedFree ? 'selected' : ''}>무료</option>
+             </select>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+    }
+
+    function filterAdminSounds() {
+        const query = document.getElementById('soundSearch').value.toLowerCase();
+        const filtered = CORE_SOUNDS.filter(s => s.label.toLowerCase().includes(query) || s.id.toLowerCase().includes(query));
+        renderAdminSounds(filtered);
+    }
+
+    async function updateSoundPremium(soundId, value) {
+      let newValue = undefined;
+      if (value === 'premium') newValue = true;
+      if (value === 'free') newValue = false;
+
+      if (newValue === undefined) {
+          delete premiumConfig[soundId];
+      } else {
+          premiumConfig[soundId] = newValue;
+      }
+
+      try {
+        await db.collection('appConfig').doc('soundPremium').set({
+          overrides: premiumConfig,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        
+        showStatus('success', '✅ 음원 설정이 업데이트되었습니다.');
+        // UI 즉시 갱신
+        filterAdminSounds(); 
+      } catch (err) {
+        showStatus('error', '업데이트 실패: ' + err.message);
+      }
+    }
+
+    // ── 어드민 패널 열기/닫기 ── (Legacy wrapper for compatibility)
+    // let adminOpen = false; // Moved up
 
     // ── "원픽소프트" 클릭 → Google 로그인 → 마스터면 패널 열기 ──
     const adminTrigger = document.getElementById('adminTrigger');
