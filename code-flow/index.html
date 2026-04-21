@@ -828,125 +828,667 @@
     // homepage에서 sounds.js를 직접 임포트할 수 없으므로, 간단한 리스트를 정의하거나 Firestore에서 목록을 가져와야 함.
     // 여기서는 앱의 핵심 음원들을 로드합니다 (실제 운영시에는 Firestore appConfig/sounds 에 목록 관리 권장)
     const CORE_SOUNDS = [
-      {id: "cafe", label: "카페 분위기", icon: "coffee"},
-      {id: "library", label: "공공 도서관", icon: "local_library"},
-      {id: "airplane", label: "비행기 내부", icon: "airplanemode_active"},
-      {id: "espresso", label: "에스프레소", icon: "water_drop"},
-      {id: "museum_cafe", label: "뮤지엄 카페", icon: "museum"},
-      {id: "cooking_oil", label: "요리 소리", icon: "skillet"},
-      {id: "diesel_truck", label: "디젤 트럭", icon: "local_shipping"},
-      {id: "highway", label: "고속도로", icon: "add_road"},
-      {id: "car_driving", label: "차량 주행음", icon: "directions_car"},
-      {id: "paper_marker", label: "종이와 마커", icon: "edit_note"},
-      {id: "paper_marker_slow", label: "종이와 마커 (느)", icon: "edit_note"},
-      {id: "blue_switch", label: "청축 키보드", icon: "keyboard"},
-      {id: "blue_switch_slow", label: "청축 키보드 (느)", icon: "keyboard"},
-      {id: "brown_switch", label: "갈축 키보드", icon: "keyboard_command_key"},
-      {id: "brown_switch_slow", label: "갈축 키보드 (느)", icon: "keyboard_command_key"},
-      {id: "red_switch", label: "적축 키보드", icon: "keyboard_tab"},
-      {id: "red_switch_slow", label: "적축 키보드 (느)", icon: "keyboard_tab"},
-      {id: "topre", label: "무접점 보드", icon: "keyboard_capslock"},
-      {id: "topre_slow", label: "무접점 보드 (느)", icon: "keyboard_capslock"},
-      {id: "typewriter", label: "타자기", icon: "keyboard_alt"},
-      {id: "typewriter_slow", label: "타자기 (느)", icon: "keyboard_alt"},
-      {id: "lofi1", label: "정적 브레인", icon: "headset"},
-      {id: "lofi2", label: "자갈길 꿈", icon: "headphones"},
-      {id: "lofi3", label: "밤의 꽃", icon: "music_note"},
-      {id: "lofi4", label: "밤의 세레나데", icon: "album"},
-      {id: "lofi6", label: "네온 에코", icon: "waves"},
-      {id: "lofi7", label: "픽셀 몽상", icon: "grid_view"},
-      {id: "lofi9", label: "정적의 공상", icon: "psychology"},
-      {id: "study_lofi_rnb", label: "벨벳 미드나잇", icon: "piano"},
-      {id: "study_lofi_hurting", label: "모노크롬 노트", icon: "music_note"},
-      {id: "study_lofi_chill", label: "별가루 라운지", icon: "headphones"},
-      {id: "rain_window", label: "창가 빗소리", icon: "rainy"},
-      {id: "rain_car", label: "차 안 빗소리", icon: "directions_car"},
-      {id: "rain_leaves", label: "잎새 빗소리", icon: "park"},
-      {id: "thunder", label: "천둥 소리", icon: "thunderstorm"},
-      {id: "cicadas", label: "매미 소리", icon: "bug_report"},
-      {id: "night_crickets", label: "밤벌레 소리", icon: "nightlight"},
-      {id: "walking_sand", label: "모래 걷기", icon: "footprint"},
-      {id: "wind_chimes", label: "윈드 차임", icon: "filter_vintage"},
-      {id: "fan", label: "PC 쿨링팬", icon: "wind_power"},
-      {id: "hdd", label: "HDD 읽기음", icon: "storage"},
-      {id: "server", label: "서버 룸", icon: "dns"},
-      {id: "printer", label: "도트 프린터", icon: "print"},
-      {id: "loop1", label: "현재의 차이", icon: "track_changes"},
-      {id: "loop2", label: "로파이 드럼", icon: "vibration"},
-      {id: "loop3", label: "팝 기타", icon: "music_note"},
-      {id: "loop4", label: "심연의 숲", icon: "forest"},
-      {id: "loop5", label: "칩튠 멜로디", icon: "videogame_asset"},
-      {id: "loop6", label: "칠 아웃", icon: "spa"},
-      {id: "loop7", label: "멜로우 드럼", icon: "adjust"},
-      {id: "loop8", label: "빈티지 하프", icon: "flare"},
-      {id: "hail_loop", label: "우박", icon: "weather_hail"},
-      {id: "foggy_city_morning", label: "안개 낀 도시 아침", icon: "foggy"},
-      {id: "januarysleet", label: "겨울 진눈깨비", icon: "ac_unit"},
-      {id: "cat_purr", label: "고양이 그루밍", icon: "pets"},
-      {id: "forest_bird", label: "숲 속 새소리", icon: "raven"},
-      {id: "fireplace", label: "벽난로 장작", icon: "local_fire_department"},
-      {id: "crickets_night", label: "밤 귀뚜라미", icon: "nights_stay"},
-      {id: "garden_morning", label: "이른 아침 정원", icon: "yard"},
-      {id: "crickets_forest", label: "숲 귀뚜라미", icon: "forest"},
-      {id: "pine_fire", label: "솔잎 불씨", icon: "outdoor_grill"},
-      {id: "waterfall", label: "산속 폭포", icon: "water"},
-      {id: "underwater", label: "수중 공간음", icon: "pool"},
-      {id: "brook", label: "시냇물", icon: "waves"},
-      {id: "ocean_waves", label: "잔잔한 파도", icon: "surfing"},
-      {id: "relaxing_stream", label: "계곡", icon: "water"},
-      {id: "breeze_forest", label: "숲 속 산들바람", icon: "air"},
-      {id: "spring_field", label: "봄 들판 바람", icon: "eco"},
-      {id: "blizzard", label: "눈보라", icon: "severe_cold"},
-      {id: "winter_wind", label: "겨울밤 바람", icon: "snowing"},
-      {id: "freq_fire", label: "집중력 향상", icon: "psychology"},
-      {id: "freq_rain", label: "스트레스 해소", icon: "spa"},
-      {id: "freq_space", label: "깊은 명상", icon: "self_improvement"},
-      {id: "freq_train", label: "숙면 유도", icon: "bedtime"},
-      {id: "freq_creative", label: "창의력", icon: "lightbulb"},
-      {id: "bowhead_whale", label: "북극 고래", icon: "water"},
-      {id: "europeanrobin", label: "꼬까울새", icon: "flutter_dash"},
-      {id: "nightingale", label: "나이팅게일", icon: "flutter_dash"},
-      {id: "blackbird", label: "검은지빠귀", icon: "flutter_dash"},
-      {id: "skylark", label: "종다리", icon: "flutter_dash"},
-      {id: "singing-bell", label: "싱잉벨", icon: "notifications_active"},
-      {id: "humpback_whale", label: "혹등 고래", icon: "water"},
-      {id: "pen_01", label: "볼펜 쓰기", icon: "draw"},
-      {id: "pen_01_slow", label: "볼펜 쓰기 (느)", icon: "draw"},
-      {id: "pencil", label: "연필 쓰기", icon: "edit"},
-      {id: "pencil_slow", label: "연필 쓰기 (느)", icon: "edit"},
-      {id: "page_turn", label: "책장 넘기기", icon: "menu_book"},
-      {id: "boiling_water", label: "물 끓는 소리", icon: "water_drop"},
-      {id: "city_ambience", label: "도시의 소음", icon: "location_city"},
-      {id: "chopping", label: "도마질 소리", icon: "restaurant"},
-      {id: "shower", label: "샤워 소리", icon: "shower"},
-      {id: "humidifier", label: "가습기", icon: "air"},
-      {id: "smoking", label: "전자담배", icon: "smoking_rooms"},
-      {id: "heartbeat", label: "심장 박동", icon: "favorite"},
-      {id: "pink_noise", label: "핑크 노이즈", icon: "blur_on"},
-      {id: "brown_noise", label: "브라운 노이즈", icon: "blur_circular"},
-      {id: "ice_water", label: "얼음물 소리", icon: "snowflake"},
-      {id: "synth_calm", label: "평온한 신스", icon: "auto_awesome"},
-      {id: "lofi_chill", label: "칠 로파이", icon: "nightlife"},
-      {id: "synth_dark", label: "심연의 신스", icon: "brightness_3"},
-      {id: "underwater_ambience_premium", label: "심해 공간음", icon: "tsunami"},
-      {id: "walking_snow", label: "눈길 걷기", icon: "snowshoeing"},
-      {id: "walking_nature", label: "숲길 걷기", icon: "nature_people"},
-      {id: "train_cabin", label: "기차 객실", icon: "train"},
-      {id: "deep_sea_base", label: "해저 기지", icon: "scuba_diving"},
-      {id: "mud_volcano", label: "진흙 화산", icon: "volcano"},
-      {id: "calm_water", label: "잔잔한 물가", icon: "waves"},
-      {id: "scuba_diving", label: "스쿠버 다이빙", icon: "scuba_diving"},
-      {id: "underwater_deep", label: "깊은 바닷속", icon: "pool"},
-      {id: "lofi_delayed_lead", label: "딜레이 리드", icon: "music_note"},
-      {id: "lofi_supporting_piano", label: "서포팅 피아노", icon: "piano"},
-      {id: "lofi_gamers_organ", label: "게이머 오르간", icon: "album"},
-      {id: "microwave", label: "전자레인지", icon: "microwave"},
-      {id: "space_breathing", label: "우주복 호흡", icon: "rocket_launch"},
-      {id: "tumble_dryer", label: "회전 건조기", icon: "wash"},
-      {id: "blue_noise", label: "블루 노이즈", icon: "blur_on"},
-      {id: "grey_noise", label: "그레이 노이즈", icon: "blur_linear"},
-      {id: "rain_city_night", label: "도심의 밤비", icon: "rainy"}
-    ];
+  {
+    "id": "cafe",
+    "label": "카페 분위기",
+    "icon": "coffee"
+  },
+  {
+    "id": "library",
+    "label": "공공 도서관",
+    "icon": "local_library"
+  },
+  {
+    "id": "airplane",
+    "label": "비행기 내부",
+    "icon": "airplanemode_active"
+  },
+  {
+    "id": "espresso",
+    "label": "에스프레소",
+    "icon": "water_drop"
+  },
+  {
+    "id": "museum_cafe",
+    "label": "뮤지엄 카페",
+    "icon": "museum"
+  },
+  {
+    "id": "cooking_oil",
+    "label": "요리 소리",
+    "icon": "cooking"
+  },
+  {
+    "id": "diesel_truck",
+    "label": "디젤 트럭",
+    "icon": "local_shipping"
+  },
+  {
+    "id": "highway",
+    "label": "고속도로",
+    "icon": "add_road"
+  },
+  {
+    "id": "car_driving",
+    "label": "차량 주행음",
+    "icon": "directions_car"
+  },
+  {
+    "id": "laundromat",
+    "label": "코인 세탁소",
+    "icon": "local_laundry_service"
+  },
+  {
+    "id": "bus_japan",
+    "label": "일본 버스 내부",
+    "icon": "directions_bus"
+  },
+  {
+    "id": "large_hall",
+    "label": "대강당",
+    "icon": "account_balance"
+  },
+  {
+    "id": "paper_marker",
+    "label": "종이와 마커",
+    "icon": "edit_note"
+  },
+  {
+    "id": "paper_marker_slow",
+    "label": "종이와 마커 (느리게)",
+    "icon": "edit_note"
+  },
+  {
+    "id": "blackboard_chalk",
+    "label": "칠판 분필",
+    "icon": "edit_square"
+  },
+  {
+    "id": "blackboard_chalk_slow",
+    "label": "칠판 분필 (느리게)",
+    "icon": "edit_square"
+  },
+  {
+    "id": "keypad_press",
+    "label": "키패드",
+    "icon": "dialpad"
+  },
+  {
+    "id": "keypad_press_slow",
+    "label": "키패드 (느리게)",
+    "icon": "dialpad"
+  },
+  {
+    "id": "whiteboard_marker",
+    "label": "화이트보드 마커",
+    "icon": "draw"
+  },
+  {
+    "id": "whiteboard_marker_slow",
+    "label": "화이트보드 마커 (느리게)",
+    "icon": "draw"
+  },
+  {
+    "id": "blue_switch",
+    "label": "청축 키보드",
+    "icon": "keyboard"
+  },
+  {
+    "id": "blue_switch_slow",
+    "label": "청축 키보드 (느리게)",
+    "icon": "keyboard"
+  },
+  {
+    "id": "brown_switch",
+    "label": "갈축 키보드",
+    "icon": "keyboard_command_key"
+  },
+  {
+    "id": "brown_switch_slow",
+    "label": "갈축 키보드 (느리게)",
+    "icon": "keyboard_command_key"
+  },
+  {
+    "id": "red_switch",
+    "label": "적축 키보드",
+    "icon": "keyboard_tab"
+  },
+  {
+    "id": "red_switch_slow",
+    "label": "적축 키보드 (느리게)",
+    "icon": "keyboard_tab"
+  },
+  {
+    "id": "topre",
+    "label": "무접점 보드",
+    "icon": "keyboard_capslock"
+  },
+  {
+    "id": "topre_slow",
+    "label": "무접점 보드 (느리게)",
+    "icon": "keyboard_capslock"
+  },
+  {
+    "id": "typewriter",
+    "label": "타자기",
+    "icon": "keyboard_alt"
+  },
+  {
+    "id": "typewriter_slow",
+    "label": "타자기 (느리게)",
+    "icon": "keyboard_alt"
+  },
+  {
+    "id": "lofi1",
+    "label": "정적 브레인",
+    "icon": "headset"
+  },
+  {
+    "id": "lofi2",
+    "label": "자갈길 꿈",
+    "icon": "headphones"
+  },
+  {
+    "id": "lofi3",
+    "label": "밤의 꽃",
+    "icon": "music_note"
+  },
+  {
+    "id": "lofi4",
+    "label": "밤의 세레나데",
+    "icon": "album"
+  },
+  {
+    "id": "lofi6",
+    "label": "네온 에코",
+    "icon": "waves"
+  },
+  {
+    "id": "lofi7",
+    "label": "픽셀 몽상",
+    "icon": "grid_view"
+  },
+  {
+    "id": "lofi9",
+    "label": "정적의 공상",
+    "icon": "psychology"
+  },
+  {
+    "id": "study_lofi_rnb",
+    "label": "벨벳 미드나잇",
+    "icon": "piano"
+  },
+  {
+    "id": "study_lofi_hurting",
+    "label": "모노크롬 노트",
+    "icon": "music_note"
+  },
+  {
+    "id": "study_lofi_chill",
+    "label": "별가루 라운지",
+    "icon": "headphones"
+  },
+  {
+    "id": "rain_window",
+    "label": "창가 빗소리",
+    "icon": "rainy"
+  },
+  {
+    "id": "rain_car",
+    "label": "차 안 빗소리",
+    "icon": "directions_car"
+  },
+  {
+    "id": "rain_leaves",
+    "label": "잎새 빗소리",
+    "icon": "park"
+  },
+  {
+    "id": "thunder",
+    "label": "천둥 소리",
+    "icon": "thunderstorm"
+  },
+  {
+    "id": "wind_chime",
+    "label": "풍경 소리",
+    "icon": "notifications_active"
+  },
+  {
+    "id": "cicadas",
+    "label": "매미 소리",
+    "icon": "bug_report"
+  },
+  {
+    "id": "night_crickets",
+    "label": "밤벌레 소리",
+    "icon": "nightlight"
+  },
+  {
+    "id": "walking_sand",
+    "label": "모래 걷기",
+    "icon": "footprint"
+  },
+  {
+    "id": "wind_chimes",
+    "label": "윈드 차임",
+    "icon": "filter_vintage"
+  },
+  {
+    "id": "fan",
+    "label": "PC 쿨링팬",
+    "icon": "wind_power"
+  },
+  {
+    "id": "hdd",
+    "label": "HDD 읽기음",
+    "icon": "storage"
+  },
+  {
+    "id": "server",
+    "label": "서버 룸",
+    "icon": "dns"
+  },
+  {
+    "id": "printer",
+    "label": "도트 프린터",
+    "icon": "print"
+  },
+  {
+    "id": "loop1",
+    "label": "현재의 차이",
+    "icon": "track_changes"
+  },
+  {
+    "id": "loop2",
+    "label": "로파이 드럼",
+    "icon": "vibration"
+  },
+  {
+    "id": "loop3",
+    "label": "팝 기타",
+    "icon": "music_note"
+  },
+  {
+    "id": "loop4",
+    "label": "심연의 숲",
+    "icon": "forest"
+  },
+  {
+    "id": "loop5",
+    "label": "칩튠 멜로디",
+    "icon": "videogame_asset"
+  },
+  {
+    "id": "loop6",
+    "label": "칠 아웃",
+    "icon": "spa"
+  },
+  {
+    "id": "loop7",
+    "label": "멜로우 드럼",
+    "icon": "adjust"
+  },
+  {
+    "id": "loop8",
+    "label": "빈티지 하프",
+    "icon": "flare"
+  },
+  {
+    "id": "hail_loop",
+    "label": "우박",
+    "icon": "weather_hail"
+  },
+  {
+    "id": "foggy_city_morning",
+    "label": "안개 낀 도시 아침",
+    "icon": "foggy"
+  },
+  {
+    "id": "januarysleet",
+    "label": "겨울 진눈깨비",
+    "icon": "ac_unit"
+  },
+  {
+    "id": "cat_purr",
+    "label": "고양이 그루밍",
+    "icon": "pets"
+  },
+  {
+    "id": "forest_bird",
+    "label": "숲 속 새소리",
+    "icon": "raven"
+  },
+  {
+    "id": "fireplace",
+    "label": "벽난로 장작",
+    "icon": "local_fire_department"
+  },
+  {
+    "id": "crickets_night",
+    "label": "밤 귀뚜라미",
+    "icon": "nights_stay"
+  },
+  {
+    "id": "garden_morning",
+    "label": "이른 아침 정원",
+    "icon": "yard"
+  },
+  {
+    "id": "crickets_forest",
+    "label": "숲 귀뚜라미",
+    "icon": "forest"
+  },
+  {
+    "id": "pine_fire",
+    "label": "솔잎 불씨",
+    "icon": "outdoor_grill"
+  },
+  {
+    "id": "waterfall",
+    "label": "산속 폭포",
+    "icon": "water"
+  },
+  {
+    "id": "underwater",
+    "label": "수중 공간음",
+    "icon": "pool"
+  },
+  {
+    "id": "brook",
+    "label": "시냇물",
+    "icon": "waves"
+  },
+  {
+    "id": "ocean_waves",
+    "label": "잔잔한 파도",
+    "icon": "surfing"
+  },
+  {
+    "id": "relaxing_stream",
+    "label": "계곡",
+    "icon": "water"
+  },
+  {
+    "id": "breeze_forest",
+    "label": "숲 속 산들바람",
+    "icon": "air"
+  },
+  {
+    "id": "spring_field",
+    "label": "봄 들판 바람",
+    "icon": "eco"
+  },
+  {
+    "id": "blizzard",
+    "label": "눈보라",
+    "icon": "severe_cold"
+  },
+  {
+    "id": "winter_wind",
+    "label": "겨울밤 바람",
+    "icon": "snowing"
+  },
+  {
+    "id": "freq_fire",
+    "label": "집중력 향상",
+    "icon": "psychology"
+  },
+  {
+    "id": "freq_rain",
+    "label": "스트레스 해소",
+    "icon": "spa"
+  },
+  {
+    "id": "freq_space",
+    "label": "깊은 명상",
+    "icon": "self_improvement"
+  },
+  {
+    "id": "freq_train",
+    "label": "숙면 유도",
+    "icon": "bedtime"
+  },
+  {
+    "id": "freq_creative",
+    "label": "창의력",
+    "icon": "lightbulb"
+  },
+  {
+    "id": "deep_recovery",
+    "label": "딥 리커버리",
+    "icon": "healing"
+  },
+  {
+    "id": "power_nap",
+    "label": "파워 냅",
+    "icon": "battery_charging_80"
+  },
+  {
+    "id": "digital_detox",
+    "label": "디지털 디톡스",
+    "icon": "phonelink_off"
+  },
+  {
+    "id": "bowhead_whale",
+    "label": "북극 고래",
+    "icon": "water"
+  },
+  {
+    "id": "europeanrobin",
+    "label": "꼬까울새",
+    "icon": "flutter_dash"
+  },
+  {
+    "id": "nightingale",
+    "label": "나이팅게일",
+    "icon": "flutter_dash"
+  },
+  {
+    "id": "blackbird",
+    "label": "검은지빠귀",
+    "icon": "flutter_dash"
+  },
+  {
+    "id": "skylark",
+    "label": "종다리",
+    "icon": "flutter_dash"
+  },
+  {
+    "id": "singing-bell",
+    "label": "싱잉벨",
+    "icon": "notifications_active"
+  },
+  {
+    "id": "humpback_whale",
+    "label": "혹등 고래",
+    "icon": "water"
+  },
+  {
+    "id": "pen_01",
+    "label": "볼펜 쓰기",
+    "icon": "draw"
+  },
+  {
+    "id": "pen_01_slow",
+    "label": "볼펜 쓰기 (느리게)",
+    "icon": "draw"
+  },
+  {
+    "id": "pencil",
+    "label": "연필 쓰기",
+    "icon": "edit"
+  },
+  {
+    "id": "pencil_slow",
+    "label": "연필 쓰기 (느리게)",
+    "icon": "edit"
+  },
+  {
+    "id": "page_turn",
+    "label": "책장 넘기기",
+    "icon": "menu_book"
+  },
+  {
+    "id": "boiling_water",
+    "label": "물 끓는 소리",
+    "icon": "water_drop"
+  },
+  {
+    "id": "city_ambience",
+    "label": "도시의 소음",
+    "icon": "location_city"
+  },
+  {
+    "id": "chopping",
+    "label": "도마질 소리",
+    "icon": "restaurant"
+  },
+  {
+    "id": "shower",
+    "label": "샤워 소리",
+    "icon": "shower"
+  },
+  {
+    "id": "jogging",
+    "label": "조깅",
+    "icon": "directions_run"
+  },
+  {
+    "id": "humidifier",
+    "label": "가습기",
+    "icon": "air"
+  },
+  {
+    "id": "smoking",
+    "label": "전자담배",
+    "icon": "smoking_rooms"
+  },
+  {
+    "id": "heartbeat",
+    "label": "심장 박동",
+    "icon": "favorite"
+  },
+  {
+    "id": "pink_noise",
+    "label": "핑크 노이즈",
+    "icon": "blur_on"
+  },
+  {
+    "id": "brown_noise",
+    "label": "브라운 노이즈",
+    "icon": "blur_circular"
+  },
+  {
+    "id": "ice_water",
+    "label": "얼음물 소리",
+    "icon": "snowflake"
+  },
+  {
+    "id": "synth_calm",
+    "label": "평온한 신스",
+    "icon": "auto_awesome"
+  },
+  {
+    "id": "lofi_chill",
+    "label": "칠 로파이",
+    "icon": "nightlife"
+  },
+  {
+    "id": "synth_dark",
+    "label": "심연의 신스",
+    "icon": "brightness_3"
+  },
+  {
+    "id": "underwater_ambience_premium",
+    "label": "심해 공간음",
+    "icon": "tsunami"
+  },
+  {
+    "id": "walking_snow",
+    "label": "눈길 걷기",
+    "icon": "snowshoeing"
+  },
+  {
+    "id": "walking_nature",
+    "label": "숲길 걷기",
+    "icon": "nature_people"
+  },
+  {
+    "id": "train_cabin",
+    "label": "기차 객실",
+    "icon": "train"
+  },
+  {
+    "id": "deep_sea_base",
+    "label": "해저 기지",
+    "icon": "scuba_diving"
+  },
+  {
+    "id": "mud_volcano",
+    "label": "진흙 화산",
+    "icon": "volcano"
+  },
+  {
+    "id": "calm_water",
+    "label": "잔잔한 물가",
+    "icon": "waves"
+  },
+  {
+    "id": "scuba_diving",
+    "label": "스쿠버 다이빙",
+    "icon": "scuba_diving"
+  },
+  {
+    "id": "underwater_deep",
+    "label": "깊은 바닷속",
+    "icon": "pool"
+  },
+  {
+    "id": "lofi_delayed_lead",
+    "label": "딜레이 리드",
+    "icon": "music_note"
+  },
+  {
+    "id": "lofi_supporting_piano",
+    "label": "서포팅 피아노",
+    "icon": "piano"
+  },
+  {
+    "id": "lofi_gamers_organ",
+    "label": "게이머 오르간",
+    "icon": "album"
+  },
+  {
+    "id": "microwave",
+    "label": "전자레인지",
+    "icon": "microwave"
+  },
+  {
+    "id": "space_breathing",
+    "label": "우주복 호흡",
+    "icon": "rocket_launch"
+  },
+  {
+    "id": "tumble_dryer",
+    "label": "회전 건조기",
+    "icon": "wash"
+  },
+  {
+    "id": "blue_noise",
+    "label": "블루 노이즈",
+    "icon": "blur_on"
+  },
+  {
+    "id": "grey_noise",
+    "label": "그레이 노이즈",
+    "icon": "blur_linear"
+  },
+  {
+    "id": "rain_city_night",
+    "label": "도심의 밤비",
+    "icon": "rainy"
+  }
+];
 
     async function loadAdminSounds() {
       const listEl = document.getElementById('adminSoundList');
