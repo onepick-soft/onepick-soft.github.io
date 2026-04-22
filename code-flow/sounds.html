@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sound Sources - CodeFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@300;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0a0a0a;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --border-color: rgba(255, 255, 255, 0.05);
+        --primary-color: #00fbfb;
+        --text-main: #e5e2e1;
+        --text-dim: rgba(229, 226, 225, 0.4);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      h1 {
+        font-family: "Outfit", sans-serif;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: var(--primary-color);
+        margin-bottom: 16px;
+      }
+
+      .hero-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .section {
+        margin-bottom: 40px;
+      }
+
+      .section-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 16px;
+        padding-left: 4px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 24px;
+        backdrop-blur: 10px;
+      }
+
+      .source-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+      }
+
+      .source-info h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+
+      footer {
+        margin-top: 80px;
+        text-align: center;
+        font-size: 10px;
+        color: var(--text-dim);
+        letter-spacing: 0.1em;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        border: 1px solid var(--border-color);
+        padding: 8px 16px;
+        border-radius: 100px;
+        transition: all 0.2s;
+      }
+
+      .back-link:hover {
+        background: var(--card-bg);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>&lt; Sound Sources /&gt;</h1>
+        <p class="hero-text">Credits & Licenses</p>
+      </header>
+
+      <div class="section">
+        <h3 class="section-title">Attributions</h3>
+        <div class="card">
+          <div
+            class="source-item"
+            style="
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 12px;
+              border-bottom: none;
+            "
+          >
+            <div class="source-info">
+              <h4>klankbeeld (Freesound.org)</h4>
+              <p
+                style="
+                  font-size: 13px;
+                  margin-top: 8px;
+                  color: var(--text-main);
+                "
+              >
+                sound from
+                <a
+                  href="http://www.freesound.org/people/klankbeeld/"
+                  target="_blank"
+                  style="color: var(--primary-color); text-decoration: none"
+                  >http://www.freesound.org/people/klankbeeld/</a
+                >
+              </p>
+            </div>
+
+            <!-- Author's mandatory quote -->
+            <p
+              style="
+                font-size: 12px;
+                color: var(--text-dim);
+                line-height: 1.6;
+                margin-top: 8px;
+              "
+            >
+              "When you use this sound it would be nice if you spent a voluntarily donation to freesound. <br />
+              YOU ALWAYS HAVE TO CREDIT/ATTRIBUTE me (klankbeeld) and freesound.org in your work if you use this sound. <br />
+              Do it like this: sound from http://www.freesound.org/people/klankbeeld/ <br />
+              Do not use an indirect link."
+            </p>
+
+            <div
+              style="
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid var(--border-color);
+                width: 100%;
+              "
+            >
+              <p
+                style="
+                  font-size: 11px;
+                  color: var(--text-dim);
+                  line-height: 1.6;
+                "
+              >
+                <span style="color: var(--primary-color); font-weight: 700"
+                  >LICENSE:</span
+                >
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  style="
+                    color: var(--text-main);
+                    text-decoration: none;
+                    border-bottom: 1px solid var(--primary-color);
+                  "
+                  >CC BY 4.0</a
+                ><br />
+                <span style="color: var(--primary-color); font-weight: 700"
+                  >MODIFICATION:</span
+                >
+                The original sound has been modified (edited, normalized, and
+                looped) for use in this application.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Special Thanks</h3>
+        <div class="card">
+          <p style="font-size: 13px; color: var(--text-dim); line-height: 1.8">
+            All sounds in CodeFlow are carefully selected to provide the best
+            immersive experience. Some sounds were produced in-house, while
+            others utilize valuable assets from the open-source community. We
+            would like to express our gratitude to all the artists who
+            contributed to this project.
+          </p>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2026 Onepicksoft. All rights reserved.</p>
+        <a
+          href="#"
+          onclick="window.close(); return false;"
+          class="back-link"
+          >CLOSE PAGE</a
+        >
+      </footer>
+    </div>
+  </body>
+</html>
